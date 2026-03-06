@@ -1,0 +1,14 @@
+rootProject.name = 'enterprise-commerce-platform'
+
+include 'common'
+include 'identity-access'
+include 'customers'
+include 'branches'
+include 'catalog'
+include 'inventory'
+include 'orders'
+include 'payments'
+include 'notifications'
+include 'app'
+
+
