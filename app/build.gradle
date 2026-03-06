@@ -1,19 +1,41 @@
 plugins {
+    id 'org.springframework.boot'
+    id 'io.spring.dependency-management'
     id 'java'
 }
 
-group = 'com.company.platform'
-version = '1.0-SNAPSHOT'
-
-repositories {
-    mavenCentral()
-}
-
 dependencies {
-    testImplementation platform('org.junit:junit-bom:5.10.0')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
-}
+    implementation project(':common')
+    implementation project(':identity-access')
+    implementation project(':customers')
+    implementation project(':branches')
+    implementation project(':catalog')
+    implementation project(':inventory')
+    implementation project(':orders')
+    implementation project(':payments')
+    implementation project(':notifications')
 
-test {
-    useJUnitPlatform()
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-amqp'
+
+    implementation "org.flywaydb:flyway-core:${rootProject.ext.flywayVersion}"
+    implementation "org.flywaydb:flyway-database-postgresql:${rootProject.ext.flywayVersion}"
+
+    implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${rootProject.ext.springdocVersion}"
+
+    runtimeOnly "org.postgresql:postgresql:${rootProject.ext.postgresqlVersion}"
+
+    compileOnly "org.projectlombok:lombok:${rootProject.ext.lombokVersion}"
+    annotationProcessor "org.projectlombok:lombok:${rootProject.ext.lombokVersion}"
+
+    implementation "org.mapstruct:mapstruct:${rootProject.ext.mapstructVersion}"
+    annotationProcessor "org.mapstruct:mapstruct-processor:${rootProject.ext.mapstructVersion}"
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation "org.testcontainers:junit-jupiter:${rootProject.ext.testcontainersVersion}"
+    testImplementation "org.testcontainers:postgresql:${rootProject.ext.testcontainersVersion}"
 }

@@ -1,19 +1,19 @@
 plugins {
-    id 'java'
-}
-
-group = 'com.company.platform'
-version = '1.0-SNAPSHOT'
-
-repositories {
-    mavenCentral()
+    id 'io.spring.dependency-management'
 }
 
 dependencies {
-    testImplementation platform('org.junit:junit-bom:5.10.0')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
-}
+    implementation project(':common')
+    implementation project(':orders')
+    implementation project(':payments')
+    implementation project(':inventory')
 
-test {
-    useJUnitPlatform()
+
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-amqp'
+
+    compileOnly "org.projectlombok:lombok:${rootProject.ext.lombokVersion}"
+    annotationProcessor "org.projectlombok:lombok:${rootProject.ext.lombokVersion}"
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }

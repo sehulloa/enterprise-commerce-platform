@@ -1,19 +1,57 @@
 plugins {
     id 'java'
+    id 'org.sonarqube' version '5.1.0.4882'
+    id 'org.springframework.boot' version '3.3.2' apply false
+    id 'io.spring.dependency-management' version '1.1.6' apply false
 }
 
-group = 'com.company.platform'
-version = '1.0-SNAPSHOT'
-
-repositories {
-    mavenCentral()
+ext {
+    mapstructVersion = '1.5.5.Final'
+    lombokVersion = '1.18.34'
+    postgresqlVersion = '42.7.3'
+    flywayVersion = '10.16.0'
+    springdocVersion = '2.6.0'
+    testcontainersVersion = '1.20.1'
+    jjwtVersion = '0.12.6'
 }
 
-dependencies {
-    testImplementation platform('org.junit:junit-bom:5.10.0')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
+allprojects {
+    group = 'com.company.platform'
+    version = '0.0.1-SNAPSHOT'
+
+    repositories {
+        mavenCentral()
+    }
 }
 
-test {
-    useJUnitPlatform()
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'io.spring.dependency-management'
+
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(21)
+        }
+    }
+
+    dependencyManagement {
+        imports {
+            mavenBom "org.springframework.boot:spring-boot-dependencies:3.3.2"
+        }
+    }
+
+    configurations {
+        compileOnly {
+            extendsFrom annotationProcessor
+        }
+    }
+
+    dependencies {
+        testImplementation platform("org.junit:junit-bom:5.10.3")
+        testImplementation 'org.junit.jupiter:junit-jupiter'
+    }
+
+    tasks.withType(Test).configureEach {
+        useJUnitPlatform()
+    }
 }

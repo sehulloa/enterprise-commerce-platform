@@ -1,19 +1,22 @@
 plugins {
-    id 'java'
-}
-
-group = 'com.company.platform'
-version = '1.0-SNAPSHOT'
-
-repositories {
-    mavenCentral()
+    id 'io.spring.dependency-management'
 }
 
 dependencies {
-    testImplementation platform('org.junit:junit-bom:5.10.0')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
-}
+    implementation project(':common')
+    implementation project(':catalog')
+    implementation project(':branches')
 
-test {
-    useJUnitPlatform()
+
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+    compileOnly "org.projectlombok:lombok:${rootProject.ext.lombokVersion}"
+    annotationProcessor "org.projectlombok:lombok:${rootProject.ext.lombokVersion}"
+
+    implementation "org.mapstruct:mapstruct:${rootProject.ext.mapstructVersion}"
+    annotationProcessor "org.mapstruct:mapstruct-processor:${rootProject.ext.mapstructVersion}"
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
