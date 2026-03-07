@@ -1,6 +1,7 @@
 <configuration>
     <property name="LOG_PATTERN"
-              value="%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"/>
+              value="%d{yyyy-MM-dd HH:mm:ss} [%thread] [%X{traceId}] %-5level %logger{36} - %msg%n"/>
+
 
     <appender name="CONSOLE"
               class="ch.qos.logback.core.ConsoleAppender">
@@ -31,4 +32,6 @@
 
     <logger name="org.springframework" level="INFO"/>
     <logger name="org.hibernate.SQL" level="WARN"/>
+    <logger name="com.company.platform" level="DEBUG"/>
+
 </configuration>
