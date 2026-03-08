@@ -2,16 +2,8 @@ package com.company.platform.app;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
-import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 
-@SpringBootApplication(
-        scanBasePackages = "com.company.platform",
-        exclude = {
-                DataSourceAutoConfiguration.class,
-                HibernateJpaAutoConfiguration.class
-        }
-)
+@SpringBootApplication(scanBasePackages = "com.company.platform")
 public class EnterpriseCommerceApplication {
 
     public static void main(String[] args) {
