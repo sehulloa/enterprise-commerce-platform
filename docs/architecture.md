@@ -27,14 +27,25 @@ El sistema está diseñado inicialmente como un **Monolito Modular**, permitiend
 El sistema sigue una arquitectura **Monolito Modular basada en dominios**.
 
 ```text
-                  ┌─────────────────────────────┐
+                   ┌─────────────────────────────┐
                   │           Clients           │
                   │ (Web / Mobile / External)  │
                   └──────────────┬─────────────┘
                                  │
                                  ▼
+                     ┌───────────────────────┐
+                     │   Security Layer      │
+                     │ (Spring Security JWT) │
+                     │                       │
+                     │ JwtAuthenticationFilter
+                     │ AuthenticationManager
+                     │ SecurityContext       │
+                     └───────────┬───────────┘
+                                 │
+                                 ▼
                       ┌────────────────────┐
                       │   REST API Layer   │
+                      │   (Controllers)    │
                       └─────────┬──────────┘
                                 │
                                 ▼
@@ -55,7 +66,7 @@ El sistema sigue una arquitectura **Monolito Modular basada en dominios**.
                       └─────────┬──────────┘
                                 │
                                 ▼
-                          PostgreSQL
+                           PostgreSQL
 ```
 
 ---
@@ -459,7 +470,192 @@ Logging con Logback
 
 ---
 
-# 13. CI/CD
+# 13. Seguridad del sistema
+
+El sistema utiliza **Spring Security con autenticación basada en JWT (JSON Web Tokens)**.
+
+La autenticación es **stateless**, lo que significa que el servidor no mantiene sesiones.
+
+Cada request autenticado incluye un token JWT en el header:
+
+```
+Authorization: Bearer <JWT>
+```
+
+---
+
+## Endpoint de autenticación
+
+Los usuarios se autentican mediante:
+
+```
+POST /auth/login
+```
+
+Request:
+
+```json
+{
+  "username": "admin",
+  "password": "password"
+}
+```
+
+Respuesta:
+
+```json
+{
+  "success": true,
+  "data": {
+    "token": "eyJhbGciOiJIUzI1NiIs...",
+    "type": "Bearer",
+    "username": "admin"
+  }
+}
+```
+
+---
+
+## Flujo de autenticación
+
+El flujo de autenticación es el siguiente:
+
+```
+Client
+  │
+  │ POST /auth/login
+  ▼
+AuthenticationController
+  │
+  ▼
+AuthenticationService
+  │
+  ▼
+AuthenticationManager
+  │
+  ▼
+CustomUserDetailsService
+  │
+  ▼
+Database
+  │
+  ▼
+JwtService
+  │
+  ▼
+Generate JWT
+  │
+  ▼
+Client receives token
+```
+
+---
+
+## Flujo de autorización
+
+Para endpoints protegidos:
+
+```
+Client Request
+Authorization: Bearer <JWT>
+        │
+        ▼
+JwtAuthenticationFilter
+        │
+        ▼
+Validate Token
+        │
+        ▼
+Load UserDetails
+        │
+        ▼
+SecurityContextHolder
+        │
+        ▼
+Controller
+```
+
+---
+
+## Componentes de seguridad
+
+La capa de seguridad está compuesta por:
+
+```
+AuthenticationController
+AuthenticationService
+CustomUserDetailsService
+JwtService
+JwtAuthenticationFilter
+SecurityConfig
+```
+
+---
+
+## Contenido del JWT
+
+El token JWT contiene:
+
+```
+username
+roles
+permissions
+expiration
+```
+
+Esto permite que el sistema realice autorización sin consultar la base de datos en cada request.
+
+---
+
+## Autorización basada en roles y permisos
+
+El sistema utiliza dos niveles de autorización.
+
+### Roles
+
+Ejemplo:
+
+```
+ROLE_ADMIN
+ROLE_MANAGER
+```
+
+### Permisos
+
+Ejemplo:
+
+```
+USER_MANAGE
+ORDER_CREATE
+PAYMENT_REGISTER
+```
+
+Esto permite proteger endpoints mediante anotaciones como:
+
+```java
+@PreAuthorize("hasRole('ADMIN')")
+```
+
+o
+
+```java
+@PreAuthorize("hasAuthority('ORDER_CREATE')")
+```
+
+---
+
+## Ventajas del enfoque JWT
+
+Este modelo proporciona:
+
+* autenticación stateless
+* mejor escalabilidad
+* menor carga en base de datos
+* compatibilidad con microservicios
+
+---
+
+# 14. CI/CD
 
 El proyecto está diseñado para integrarse con:
 
@@ -485,7 +681,7 @@ Merge
 
 ---
 
-# 14. Objetivo del proyecto
+# 15. Objetivo del proyecto
 
 El objetivo de este proyecto es simular el desarrollo de un sistema empresarial completo aplicando:
 
