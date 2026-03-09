@@ -22,6 +22,10 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-amqp'
 
+    implementation "io.jsonwebtoken:jjwt-api:${rootProject.ext.jjwtVersion}"
+    runtimeOnly "io.jsonwebtoken:jjwt-impl:${rootProject.ext.jjwtVersion}"
+    runtimeOnly "io.jsonwebtoken:jjwt-jackson:${rootProject.ext.jjwtVersion}"
+
     implementation "org.flywaydb:flyway-core:${rootProject.ext.flywayVersion}"
     implementation "org.flywaydb:flyway-database-postgresql:${rootProject.ext.flywayVersion}"
 

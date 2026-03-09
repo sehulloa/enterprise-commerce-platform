@@ -31,8 +31,6 @@ public class CorrelationIdFilter  extends OncePerRequestFilter {
         MDC.put(MDC_KEY, correlationId);
         response.setHeader(CORRELATION_ID_HEADER, correlationId);
 
-        log.info("CorrelationIdFilter applied with traceId={}", correlationId);
-
         try {
             filterChain.doFilter(request, response);
         } finally {
