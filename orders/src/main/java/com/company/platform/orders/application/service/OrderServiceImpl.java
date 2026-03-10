@@ -1,6 +1,7 @@
 package com.company.platform.orders.application.service;
 
 import com.company.platform.catalog.application.service.CatalogQueryService;
+import com.company.platform.inventory.application.service.InventoryQueryService;
 import com.company.platform.orders.api.dto.CreateOrderItemRequest;
 import com.company.platform.orders.api.dto.CreateOrderRequest;
 import com.company.platform.orders.domain.enumtype.OrderStatus;
@@ -23,6 +24,7 @@ public class OrderServiceImpl implements OrderService{
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
     private final CatalogQueryService catalogQueryService;
+    private final InventoryQueryService inventoryQueryService;
 
     @Transactional
     @Override
@@ -38,6 +40,9 @@ public class OrderServiceImpl implements OrderService{
         Order savedOrder = orderRepository.save(order);
 
         BigDecimal total = BigDecimal.ZERO;
+        boolean allAvailable = true;
+        boolean anyAvailable = false;
+
 
         for (CreateOrderItemRequest itemRequest : request.getItems()) {
 
@@ -46,6 +51,21 @@ public class OrderServiceImpl implements OrderService{
 
             BigDecimal itemTotal =
                     unitPrice.multiply(BigDecimal.valueOf(itemRequest.getQuantity()));
+
+            // Revisa stock
+            int availableStock = inventoryQueryService.getAvailableStock(
+                    request.getBranchId(),
+                    itemRequest.getProductId()
+            );
+
+            if (availableStock >= itemRequest.getQuantity()) {
+                anyAvailable = true;
+            } else if (availableStock > 0) {
+                allAvailable = false;
+                anyAvailable = true;
+            } else {
+                allAvailable = false;
+            }
 
             // Crea los OrderItem
             OrderItem item = new OrderItem();
@@ -64,6 +84,7 @@ public class OrderServiceImpl implements OrderService{
 
         // Actualiza el pedido
         savedOrder.setTotalAmount(total);
+        savedOrder.setStatus(resolveInitialStatus(allAvailable, anyAvailable));
 
         return orderRepository.save(savedOrder);
     }
@@ -83,12 +104,22 @@ public class OrderServiceImpl implements OrderService{
         return orderRepository.findByBranchId(branchId);
     }
 
+    @Override
+    public List<OrderItem> findItemsByOrderId(Long orderId) {
+        return orderItemRepository.findByOrder_Id(orderId);
+    }
+
     private BigDecimal fetchProductPrice(Long productId) {
         return catalogQueryService.getProductPrice(productId);
     }
 
-    @Override
-    public List<OrderItem> findItemsByOrderId(Long orderId) {
-        return orderItemRepository.findByOrder_Id(orderId);
+    private OrderStatus resolveInitialStatus(boolean allAvailable, boolean anyAvailable) {
+        if (allAvailable) {
+            return OrderStatus.RESERVED;
+        }
+        if (anyAvailable) {
+            return OrderStatus.PARTIALLY_RESERVED;
+        }
+        return OrderStatus.PENDING_STOCK;
     }
 }
