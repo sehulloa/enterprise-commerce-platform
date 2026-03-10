@@ -1,5 +1,6 @@
 package com.company.platform.orders.application.service;
 
+import com.company.platform.catalog.application.service.CatalogQueryService;
 import com.company.platform.orders.api.dto.CreateOrderItemRequest;
 import com.company.platform.orders.api.dto.CreateOrderRequest;
 import com.company.platform.orders.domain.enumtype.OrderStatus;
@@ -21,6 +22,7 @@ public class OrderServiceImpl implements OrderService{
 
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
+    private final CatalogQueryService catalogQueryService;
 
     @Transactional
     @Override
@@ -82,7 +84,7 @@ public class OrderServiceImpl implements OrderService{
     }
 
     private BigDecimal fetchProductPrice(Long productId) {
-        return BigDecimal.valueOf(10);
+        return catalogQueryService.getProductPrice(productId);
     }
 
     @Override
