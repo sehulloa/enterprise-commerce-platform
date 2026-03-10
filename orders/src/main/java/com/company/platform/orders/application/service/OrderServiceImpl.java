@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -64,14 +66,27 @@ public class OrderServiceImpl implements OrderService{
         return orderRepository.save(savedOrder);
     }
 
+    @Override
+    public Optional<Order> findById(Long id) {
+        return orderRepository.findById(id);
+    }
+
+    @Override
+    public List<Order> findByCustomerId(Long customerId) {
+        return orderRepository.findByCustomerId(customerId);
+    }
+
+    @Override
+    public List<Order> findByBranchId(Long branchId) {
+        return orderRepository.findByBranchId(branchId);
+    }
+
     private BigDecimal fetchProductPrice(Long productId) {
-
-        /*
-        En FASE 5.2 simulamos la consulta al catálogo.
-
-        En FASE 5.4 integraremos con el módulo catalog.
-        */
-
         return BigDecimal.valueOf(10);
+    }
+
+    @Override
+    public List<OrderItem> findItemsByOrderId(Long orderId) {
+        return orderItemRepository.findByOrder_Id(orderId);
     }
 }
