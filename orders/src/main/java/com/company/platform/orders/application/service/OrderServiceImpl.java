@@ -4,7 +4,9 @@ import com.company.platform.catalog.application.service.CatalogQueryService;
 import com.company.platform.inventory.application.service.InventoryQueryService;
 import com.company.platform.orders.api.dto.CreateOrderItemRequest;
 import com.company.platform.orders.api.dto.CreateOrderRequest;
+import com.company.platform.orders.application.port.OrderEventPublisher;
 import com.company.platform.orders.domain.enumtype.OrderStatus;
+import com.company.platform.orders.domain.event.OrderCreatedEvent;
 import com.company.platform.orders.domain.model.Order;
 import com.company.platform.orders.domain.model.OrderItem;
 import com.company.platform.orders.infrastructure.repository.OrderItemRepository;
@@ -25,6 +27,7 @@ public class OrderServiceImpl implements OrderService{
     private final OrderItemRepository orderItemRepository;
     private final CatalogQueryService catalogQueryService;
     private final InventoryQueryService inventoryQueryService;
+    private final OrderEventPublisher orderEventPublisher;
 
     @Transactional
     @Override
@@ -86,7 +89,19 @@ public class OrderServiceImpl implements OrderService{
         savedOrder.setTotalAmount(total);
         savedOrder.setStatus(resolveInitialStatus(allAvailable, anyAvailable));
 
-        return orderRepository.save(savedOrder);
+        Order finalOrder = orderRepository.save(savedOrder);
+
+        orderEventPublisher.publishOrderCreated(
+                OrderCreatedEvent.builder()
+                        .orderId(finalOrder.getId())
+                        .customerId(finalOrder.getCustomerId())
+                        .branchId(finalOrder.getBranchId())
+                        .status(finalOrder.getStatus().name())
+                        .totalAmount(finalOrder.getTotalAmount())
+                        .build()
+        );
+
+        return finalOrder;
     }
 
     @Override
