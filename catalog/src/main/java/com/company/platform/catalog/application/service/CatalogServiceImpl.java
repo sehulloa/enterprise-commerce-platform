@@ -57,7 +57,7 @@ public class CatalogServiceImpl implements CatalogService {
                 .orElseThrow(() -> new RuntimeException("Product not found"));
 
         productPriceRepository
-                .findFirstByProductIdAndEffectiveToIsNullOrderByEffectiveFromDesc(product.getId())
+                .findFirstByProduct_IdAndEffectiveFromLessThanEqualAndEffectiveToIsNullOrderByEffectiveFromDesc(product.getId(), LocalDateTime.now())
                 .ifPresent(price -> {
                     price.setEffectiveTo(LocalDateTime.now());
                     productPriceRepository.save(price);
