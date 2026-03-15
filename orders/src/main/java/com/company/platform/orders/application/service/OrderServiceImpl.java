@@ -50,7 +50,7 @@ public class OrderServiceImpl implements OrderService{
         for (CreateOrderItemRequest itemRequest : request.getItems()) {
 
             // Obtiene el precio real del catálogo
-            BigDecimal unitPrice = fetchProductPrice(itemRequest.getProductId());
+            BigDecimal unitPrice = catalogQueryService.getProductPrice(itemRequest.getProductId());
 
             BigDecimal itemTotal =
                     unitPrice.multiply(BigDecimal.valueOf(itemRequest.getQuantity()));
@@ -122,10 +122,6 @@ public class OrderServiceImpl implements OrderService{
     @Override
     public List<OrderItem> findItemsByOrderId(Long orderId) {
         return orderItemRepository.findByOrder_Id(orderId);
-    }
-
-    private BigDecimal fetchProductPrice(Long productId) {
-        return catalogQueryService.getProductPrice(productId);
     }
 
     private OrderStatus resolveInitialStatus(boolean allAvailable, boolean anyAvailable) {
