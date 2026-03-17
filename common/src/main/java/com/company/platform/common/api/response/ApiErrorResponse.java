@@ -11,11 +11,11 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ApiResponse<T> {
+public class ApiErrorResponse {
 
     private final boolean success;
     private final String message;
-    private final T data;
+    private final String error;
     private final LocalDateTime timestamp;
     private final String traceId;
 
