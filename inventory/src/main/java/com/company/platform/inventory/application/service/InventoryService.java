@@ -15,4 +15,6 @@ public interface InventoryService {
     InventoryItem adjustmentOut(AdjustStockRequest request);
 
     int getAvailableStock(Long branchId, Long productId);
+
+    void consumeStock(Long branchId, Long productId, Integer quantity);
 }

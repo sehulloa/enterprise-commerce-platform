@@ -61,6 +61,29 @@ public class OrderController {
                 .ok(ApiResponseFactory.success(responses, "Orders retrieved successfully"));
     }
 
+    @PostMapping("/{orderId}/confirm")
+    public ResponseEntity<ApiResponse<OrderResponse>> confirmOrder(
+            @PathVariable Long orderId) {
+
+        OrderResponse response = orderService.confirmOrder(orderId);
+
+        return ResponseEntity.ok(
+                ApiResponseFactory.success(response, "Order confirmed successfully")
+        );
+    }
+
+    @PostMapping("/{orderId}/cancel")
+    public ResponseEntity<ApiResponse<OrderResponse>> cancelOrder(
+            @PathVariable Long orderId) {
+
+        OrderResponse response = orderService.cancelOrder(orderId);
+
+        return ResponseEntity.ok(
+                ApiResponseFactory.success(response, "Order cancelled successfully")
+        );
+    }
+
+
     private OrderResponse toResponse(Order order) {
 
         List<OrderItemResponse> items = orderService.findItemsByOrderId(order.getId())

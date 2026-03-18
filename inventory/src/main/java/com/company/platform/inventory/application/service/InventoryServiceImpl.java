@@ -1,5 +1,7 @@
 package com.company.platform.inventory.application.service;
 
+import com.company.platform.common.api.exception.BusinessException;
+import com.company.platform.common.api.exception.NotFoundException;
 import com.company.platform.inventory.api.dto.AdjustStockRequest;
 import com.company.platform.inventory.api.dto.CreateInventoryItemRequest;
 import com.company.platform.inventory.domain.enumtype.StockMovementType;
@@ -98,6 +100,33 @@ public class InventoryServiceImpl implements InventoryService {
                 .orElseThrow(() -> new RuntimeException("Inventory item not found"));
 
         return inventoryItem.getTotalQuantity() - inventoryItem.getReservedQuantity();
+    }
+
+    @Override
+    @Transactional
+    public void consumeStock(Long branchId, Long productId, Integer quantity) {
+
+        InventoryItem item = inventoryItemRepository
+                .findByBranchIdAndProductId(branchId, productId)
+                .orElseThrow(() -> new NotFoundException("Inventory item not found"));
+
+        int available = item.getTotalQuantity() - item.getReservedQuantity();
+
+        if (available < quantity) {
+            throw new BusinessException("Not enough stock available to confirm order");
+        }
+
+        item.setTotalQuantity(item.getTotalQuantity() - quantity);
+
+        inventoryItemRepository.save(item);
+
+        saveMovement(
+                item.getId(),
+                StockMovementType.OUTBOUND,
+                quantity,
+                "ORDER_CONFIRMATION",
+                "Stock consumed by order confirmation"
+        );
     }
 
     private InventoryItem findInventoryItemOrThrow(Long inventoryItemId) {
