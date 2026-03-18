@@ -2,6 +2,7 @@ package com.company.platform.payments.api.controller;
 
 import com.company.platform.common.api.response.ApiResponse;
 import com.company.platform.common.api.response.ApiResponseFactory;
+import com.company.platform.payments.api.dto.ConfirmPaymentRequest;
 import com.company.platform.payments.api.dto.CreatePaymentRequest;
 import com.company.platform.payments.api.dto.PaymentResponse;
 import com.company.platform.payments.application.service.PaymentService;
@@ -35,6 +36,17 @@ public class PaymentController {
         List<PaymentResponse> response = paymentService.getPaymentsByOrderId(orderId);
         return ResponseEntity.ok(
                 ApiResponseFactory.success(response, "Payments retrieved successfully")
+        );
+    }
+
+    @PostMapping("/{paymentId}/confirm")
+    public ResponseEntity<ApiResponse<PaymentResponse>> confirmPayment(
+            @PathVariable Long paymentId,
+            @Valid @RequestBody ConfirmPaymentRequest request
+    ) {
+        PaymentResponse response = paymentService.confirmPayment(paymentId, request);
+        return ResponseEntity.ok(
+                ApiResponseFactory.success(response, "Payment confirmed successfully")
         );
     }
 }

@@ -1,10 +1,13 @@
 package com.company.platform.payments.application.service;
 
 import com.company.platform.common.api.exception.BusinessException;
+import com.company.platform.common.api.exception.NotFoundException;
+import com.company.platform.payments.api.dto.ConfirmPaymentRequest;
 import com.company.platform.payments.api.dto.CreatePaymentRequest;
 import com.company.platform.payments.api.dto.PaymentResponse;
-import com.company.platform.payments.domain.model.Payment;
+import com.company.platform.payments.application.port.OrderCommandService;
 import com.company.platform.payments.domain.enumtype.PaymentStatus;
+import com.company.platform.payments.domain.model.Payment;
 import com.company.platform.payments.infrastructure.repository.PaymentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,6 +21,7 @@ import java.util.List;
 public class PaymentServiceImpl implements PaymentService {
 
     private final PaymentRepository paymentRepository;
+    private final OrderCommandService orderCommandService;
 
     @Override
     public PaymentResponse createPayment(CreatePaymentRequest request) {
@@ -40,6 +44,29 @@ public class PaymentServiceImpl implements PaymentService {
                 .stream()
                 .map(this::mapToResponse)
                 .toList();
+    }
+
+    @Override
+    public PaymentResponse confirmPayment(Long paymentId, ConfirmPaymentRequest request) {
+        Payment payment = paymentRepository.findById(paymentId)
+                .orElseThrow(() -> new NotFoundException("Payment not found with id: " + paymentId));
+
+        validatePaymentIsConfirmable(payment);
+
+        payment.setReference(request.getReference());
+        payment.setStatus(PaymentStatus.CAPTURED);
+
+        orderCommandService.confirmOrder(payment.getOrderId());
+
+        Payment savedPayment = paymentRepository.save(payment);
+        return mapToResponse(savedPayment);
+    }
+
+    private void validatePaymentIsConfirmable(Payment payment) {
+        if (payment.getStatus() != PaymentStatus.PENDING) {
+            throw new BusinessException("Only pending payments can be confirmed");
+        }
+
     }
 
     private void validateNoActivePayment(Long orderId) {

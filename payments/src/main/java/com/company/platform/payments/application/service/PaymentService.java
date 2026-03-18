@@ -1,5 +1,6 @@
 package com.company.platform.payments.application.service;
 
+import com.company.platform.payments.api.dto.ConfirmPaymentRequest;
 import com.company.platform.payments.api.dto.CreatePaymentRequest;
 import com.company.platform.payments.api.dto.PaymentResponse;
 
@@ -10,4 +11,6 @@ public interface PaymentService {
     PaymentResponse createPayment(CreatePaymentRequest request);
 
     List<PaymentResponse> getPaymentsByOrderId(Long orderId);
+
+    PaymentResponse confirmPayment(Long paymentId, ConfirmPaymentRequest request);
 }
