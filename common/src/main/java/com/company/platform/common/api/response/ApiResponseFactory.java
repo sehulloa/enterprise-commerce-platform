@@ -21,10 +21,6 @@ public final class ApiResponseFactory {
                 .build();
     }
 
-    public static <T> ApiResponse<T> success(T data) {
-        return success(data, null);
-    }
-
     public static ApiResponse<Void> successMessage(String message) {
         return ApiResponse.<Void>builder()
                 .success(true)
@@ -34,17 +30,13 @@ public final class ApiResponseFactory {
                 .build();
     }
 
-    public static ApiResponse<Void> error(String errorMessage, String message) {
-        return ApiResponse.<Void>builder()
+    public static ApiErrorResponse error(String message, String error) {
+        return ApiErrorResponse.builder()
                 .success(false)
                 .message(message)
-                .error(errorMessage)
+                .error(error)
                 .timestamp(LocalDateTime.now())
                 .traceId(MDC.get(TRACE_ID_KEY))
                 .build();
-    }
-
-    public static ApiResponse<Void> error(String errorMessage) {
-        return error(errorMessage, null);
     }
 }

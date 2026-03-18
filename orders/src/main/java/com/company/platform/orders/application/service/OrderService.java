@@ -1,6 +1,7 @@
 package com.company.platform.orders.application.service;
 
 import com.company.platform.orders.api.dto.CreateOrderRequest;
+import com.company.platform.orders.api.dto.OrderResponse;
 import com.company.platform.orders.domain.model.Order;
 import com.company.platform.orders.domain.model.OrderItem;
 
@@ -18,4 +19,8 @@ public interface OrderService {
     List<Order> findByBranchId(Long branchId);
 
     List<OrderItem> findItemsByOrderId(Long orderId);
+
+    OrderResponse confirmOrder(Long orderId);
+
+    OrderResponse cancelOrder(Long orderId);
 }

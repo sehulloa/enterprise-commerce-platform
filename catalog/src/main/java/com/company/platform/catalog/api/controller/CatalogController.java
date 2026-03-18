@@ -13,6 +13,8 @@ import com.company.platform.common.api.response.ApiResponse;
 import com.company.platform.common.api.response.ApiResponseFactory;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -25,33 +27,38 @@ public class CatalogController {
     private final CatalogQueryService catalogQueryService;
 
     @PostMapping("/categories")
-    public ApiResponse<Category> createCategory(@Valid @RequestBody CreateCategoryRequest request) {
+    public ResponseEntity<ApiResponse<Category>> createCategory(@Valid @RequestBody CreateCategoryRequest request) {
 
         Category category = catalogService.createCategory(request);
-        return ApiResponseFactory.success(category, "Category created successfully");
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ApiResponseFactory.success(category, "Category created successfully"));
     }
 
     @PostMapping("/products")
-    public ApiResponse<Product> createProduct(@Valid @RequestBody CreateProductRequest request) {
+    public ResponseEntity<ApiResponse<Product>> createProduct(@Valid @RequestBody CreateProductRequest request) {
         Product product = catalogService.createProduct(request);
-        return ApiResponseFactory.success(product, "Product created successfully");
+        return ResponseEntity.status(HttpStatus.CREATED)
+                        .body(ApiResponseFactory.success(product, "Product created successfully"));
     }
 
     @PostMapping("/products/prices")
-    public ApiResponse<ProductPrice> setProductPrice(@Valid @RequestBody CreateProductPriceRequest request) {
+    public ResponseEntity<ApiResponse<ProductPrice>> setProductPrice(@Valid @RequestBody CreateProductPriceRequest request) {
         ProductPrice productPrice = catalogService.setProductPrice(request);
-        return ApiResponseFactory.success(productPrice, "Product price set successfully");
+        return ResponseEntity
+                .ok(ApiResponseFactory.success(productPrice, "Product price set successfully"));
     }
 
     @GetMapping("/products/{productId}")
-    public ApiResponse<ProductResponse> findProductById(@PathVariable Long productId) {
+    public ResponseEntity<ApiResponse<ProductResponse>> findProductById(@PathVariable Long productId) {
         ProductResponse product = catalogQueryService.findProductById(productId);
-        return ApiResponseFactory.success(product, "Product retrieved successfully");
+        return ResponseEntity
+                .ok(ApiResponseFactory.success(product, "Product retrieved successfully"));
     }
 
     @GetMapping("/products")
-    public ApiResponse<List<ProductResponse>> findAllProducts() {
+    public ResponseEntity<ApiResponse<List<ProductResponse>>> findAllProducts() {
         List<ProductResponse> products = catalogQueryService.findAllProducts();
-        return ApiResponseFactory.success(products, "Products retrieved successfully");
+        return ResponseEntity
+                .ok(ApiResponseFactory.success(products, "Products retrieved successfully"));
     }
 }

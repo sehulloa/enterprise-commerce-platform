@@ -1,9 +1,14 @@
 package com.company.platform.orders.application.service;
 
 import com.company.platform.catalog.application.service.CatalogQueryService;
+import com.company.platform.common.api.exception.BusinessException;
+import com.company.platform.common.api.exception.NotFoundException;
 import com.company.platform.inventory.application.service.InventoryQueryService;
+import com.company.platform.inventory.application.service.InventoryService;
 import com.company.platform.orders.api.dto.CreateOrderItemRequest;
 import com.company.platform.orders.api.dto.CreateOrderRequest;
+import com.company.platform.orders.api.dto.OrderItemResponse;
+import com.company.platform.orders.api.dto.OrderResponse;
 import com.company.platform.orders.application.port.OrderEventPublisher;
 import com.company.platform.orders.domain.enumtype.OrderStatus;
 import com.company.platform.orders.domain.event.OrderCreatedEvent;
@@ -28,6 +33,7 @@ public class OrderServiceImpl implements OrderService{
     private final CatalogQueryService catalogQueryService;
     private final InventoryQueryService inventoryQueryService;
     private final OrderEventPublisher orderEventPublisher;
+    private final InventoryService inventoryService;
 
     @Transactional
     @Override
@@ -124,6 +130,55 @@ public class OrderServiceImpl implements OrderService{
         return orderItemRepository.findByOrder_Id(orderId);
     }
 
+    @Override
+    @Transactional
+    public OrderResponse confirmOrder(Long orderId) {
+
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new NotFoundException("Order not found"));
+
+        if (order.getStatus() != OrderStatus.RESERVED) {
+            throw new BusinessException("Only RESERVED orders can be confirmed");
+        }
+
+        List<OrderItem> items = orderItemRepository. findByOrder_Id(order.getId());
+
+        for (OrderItem item : items) {
+
+            inventoryService.consumeStock(
+                    order.getBranchId(),
+                    item.getProductId(),
+                    item.getQuantity()
+            );
+        }
+
+        order.setStatus(OrderStatus.CONFIRMED);
+
+        Order savedOrder = orderRepository.save(order);
+
+        return mapToResponse(savedOrder);
+
+    }
+
+    @Override
+    @Transactional
+    public OrderResponse cancelOrder(Long orderId) {
+
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new NotFoundException("Order not found"));
+
+        if (order.getStatus() == OrderStatus.CONFIRMED) {
+            throw new BusinessException("Confirmed orders cannot be cancelled");
+        }
+
+        order.setStatus(OrderStatus.CANCELLED);
+
+        Order savedOrder = orderRepository.save(order);
+
+        return mapToResponse(savedOrder);
+
+    }
+
     private OrderStatus resolveInitialStatus(boolean allAvailable, boolean anyAvailable) {
         if (allAvailable) {
             return OrderStatus.RESERVED;
@@ -132,5 +187,28 @@ public class OrderServiceImpl implements OrderService{
             return OrderStatus.PARTIALLY_RESERVED;
         }
         return OrderStatus.PENDING_STOCK;
+    }
+
+    private OrderResponse mapToResponse(Order order) {
+
+        List<OrderItemResponse> itemResponses = orderItemRepository.findByOrder_Id(order.getId())
+                .stream()
+                .map(item -> OrderItemResponse.builder()
+                        .id(item.getId())
+                        .productId(item.getProductId())
+                        .quantity(item.getQuantity())
+                        .unitPrice(item.getUnitPrice())
+                        .totalPrice(item.getTotalPrice())
+                        .build())
+                .toList();
+
+        return OrderResponse.builder()
+                .id(order.getId())
+                .customerId(order.getCustomerId())
+                .branchId(order.getBranchId())
+                .status(OrderStatus.valueOf(order.getStatus().name()))
+                .totalAmount(order.getTotalAmount())
+                .items(itemResponses)
+                .build();
     }
 }
