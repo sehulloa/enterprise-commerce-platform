@@ -1,4 +1,4 @@
-package com.company.platform.orders.api;
+package com.company.platform.orders.api.controller;
 
 import com.company.platform.common.api.exception.NotFoundException;
 import com.company.platform.common.api.response.ApiResponse;
