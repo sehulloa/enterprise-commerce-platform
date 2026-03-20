@@ -3,6 +3,7 @@ package com.company.platform.payments.application.service;
 import com.company.platform.common.api.exception.BusinessException;
 import com.company.platform.common.api.exception.NotFoundException;
 import com.company.platform.payments.api.dto.*;
+import com.company.platform.payments.application.event.PaymentConfirmedEvent;
 import com.company.platform.payments.application.port.OrderCommandService;
 import com.company.platform.payments.application.port.OrderQueryService;
 import com.company.platform.payments.domain.enumtype.PaymentStatus;
@@ -23,6 +24,7 @@ public class PaymentServiceImpl implements PaymentService {
     private final PaymentRepository paymentRepository;
     private final OrderCommandService orderCommandService;
     private final OrderQueryService orderQueryService;
+    private final PaymentEventPublisher paymentEventPublisher;
 
     @Override
     public PaymentResponse createPayment(CreatePaymentRequest request) {
@@ -67,6 +69,17 @@ public class PaymentServiceImpl implements PaymentService {
         orderCommandService.confirmOrder(payment.getOrderId());
 
         Payment savedPayment = paymentRepository.save(payment);
+
+        paymentEventPublisher.publishPaymentConfirmed(
+                new PaymentConfirmedEvent(
+                        savedPayment.getId(),
+                        savedPayment.getOrderId(),
+                        savedPayment.getAmount(),
+                        savedPayment.getMethod().name(),
+                        savedPayment.getReference()
+                )
+        );
+
         return mapToResponse(savedPayment);
     }
 

@@ -31,6 +31,19 @@ public class RabbitMqConfig {
     }
 
     @Bean
+    public Queue paymentConfirmedQueue() {
+        return new Queue(MessagingConstants.PAYMENT_CONFIRMED_QUEUE, true);
+    }
+
+    @Bean
+    public Binding paymentConfirmedBinding() {
+        return BindingBuilder
+                .bind(paymentConfirmedQueue())
+                .to(orderExchange())
+                .with(MessagingConstants.PAYMENT_CONFIRMED_ROUTING_KEY);
+    }
+
+    @Bean
     public Jackson2JsonMessageConverter jackson2JsonMessageConverter() {
         return new Jackson2JsonMessageConverter();
     }
