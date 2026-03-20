@@ -5,6 +5,7 @@ import com.company.platform.common.api.response.ApiResponseFactory;
 import com.company.platform.payments.api.dto.ConfirmPaymentRequest;
 import com.company.platform.payments.api.dto.CreatePaymentRequest;
 import com.company.platform.payments.api.dto.PaymentResponse;
+import com.company.platform.payments.api.dto.UpdatePaymentStatusRequest;
 import com.company.platform.payments.application.service.PaymentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -47,6 +48,30 @@ public class PaymentController {
         PaymentResponse response = paymentService.confirmPayment(paymentId, request);
         return ResponseEntity.ok(
                 ApiResponseFactory.success(response, "Payment confirmed successfully")
+        );
+    }
+
+    @PostMapping("/{paymentId}/fail")
+    public ResponseEntity<ApiResponse<PaymentResponse>> failPayment(
+            @PathVariable Long paymentId,
+            @Valid @RequestBody UpdatePaymentStatusRequest request
+    ) {
+        PaymentResponse response = paymentService.failPayment(paymentId, request);
+
+        return ResponseEntity.ok(
+                ApiResponseFactory.success(response, "Payment failed successfully")
+        );
+    }
+
+    @PostMapping("/{paymentId}/cancel")
+    public ResponseEntity<ApiResponse<PaymentResponse>> cancelPayment(
+            @PathVariable Long paymentId,
+            @Valid @RequestBody UpdatePaymentStatusRequest request
+    ) {
+        PaymentResponse response = paymentService.cancelPayment(paymentId, request);
+
+        return ResponseEntity.ok(
+                ApiResponseFactory.success(response, "Payment cancelled successfully")
         );
     }
 }

@@ -23,4 +23,6 @@ public interface OrderService {
     OrderResponse confirmOrder(Long orderId);
 
     OrderResponse cancelOrder(Long orderId);
+
+    Order getOrderEntityById(Long orderId);
 }

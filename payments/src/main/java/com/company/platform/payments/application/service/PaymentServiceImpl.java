@@ -2,10 +2,9 @@ package com.company.platform.payments.application.service;
 
 import com.company.platform.common.api.exception.BusinessException;
 import com.company.platform.common.api.exception.NotFoundException;
-import com.company.platform.payments.api.dto.ConfirmPaymentRequest;
-import com.company.platform.payments.api.dto.CreatePaymentRequest;
-import com.company.platform.payments.api.dto.PaymentResponse;
+import com.company.platform.payments.api.dto.*;
 import com.company.platform.payments.application.port.OrderCommandService;
+import com.company.platform.payments.application.port.OrderQueryService;
 import com.company.platform.payments.domain.enumtype.PaymentStatus;
 import com.company.platform.payments.domain.model.Payment;
 import com.company.platform.payments.infrastructure.repository.PaymentRepository;
@@ -13,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -22,10 +22,18 @@ public class PaymentServiceImpl implements PaymentService {
 
     private final PaymentRepository paymentRepository;
     private final OrderCommandService orderCommandService;
+    private final OrderQueryService orderQueryService;
 
     @Override
     public PaymentResponse createPayment(CreatePaymentRequest request) {
+
         validateNoActivePayment(request.getOrderId());
+
+        OrderPaymentValidationResponse orderData =
+                orderQueryService.getOrderPaymentValidation(request.getOrderId());
+
+        validateOrderEligibleForPayment(orderData);
+        validatePaymentAmountMatchesOrder(request.getAmount(), orderData.getTotalAmount());
 
         Payment payment = new Payment();
         payment.setOrderId(request.getOrderId());
@@ -62,6 +70,36 @@ public class PaymentServiceImpl implements PaymentService {
         return mapToResponse(savedPayment);
     }
 
+    @Override
+    public PaymentResponse failPayment(Long paymentId, UpdatePaymentStatusRequest request) {
+
+        Payment payment = paymentRepository.findById(paymentId)
+                .orElseThrow(() -> new BusinessException("Payment not found"));
+
+        validatePaymentIsFailAllowed(payment);
+
+        payment.setReference(request.getReference());
+        payment.setStatus(PaymentStatus.FAILED);
+
+        Payment updated = paymentRepository.save(payment);
+        return mapToResponse(updated);
+    }
+
+    @Override
+    public PaymentResponse cancelPayment(Long paymentId, UpdatePaymentStatusRequest request) {
+
+        Payment payment = paymentRepository.findById(paymentId)
+                .orElseThrow(() -> new BusinessException("Payment not found"));
+
+        validatePaymentIsCancelAllowed(payment);
+
+        payment.setReference(request.getReference());
+        payment.setStatus(PaymentStatus.CANCELLED);
+
+        Payment updated = paymentRepository.save(payment);
+        return mapToResponse(updated);
+    }
+
     private void validatePaymentIsConfirmable(Payment payment) {
         if (payment.getStatus() != PaymentStatus.PENDING) {
             throw new BusinessException("Only pending payments can be confirmed");
@@ -91,5 +129,29 @@ public class PaymentServiceImpl implements PaymentService {
                 .reference(payment.getReference())
                 .createdAt(payment.getCreatedAt())
                 .build();
+    }
+
+    private void validatePaymentIsFailAllowed(Payment payment) {
+        if (payment.getStatus() != PaymentStatus.PENDING) {
+            throw new BusinessException("Only pending payments can be marked as failed");
+        }
+    }
+
+    private void validatePaymentIsCancelAllowed(Payment payment) {
+        if (payment.getStatus() != PaymentStatus.PENDING) {
+            throw new BusinessException("Only pending payments can be cancelled");
+        }
+    }
+
+    private void validateOrderEligibleForPayment(OrderPaymentValidationResponse orderData) {
+        if (!"RESERVED".equals(orderData.getStatus())) {
+            throw new BusinessException("Only reserved orders can generate payments");
+        }
+    }
+
+    private void validatePaymentAmountMatchesOrder(BigDecimal paymentAmount, BigDecimal orderTotalAmount) {
+        if (paymentAmount.compareTo(orderTotalAmount) != 0) {
+            throw new BusinessException("Payment amount must match order total");
+        }
     }
 }
