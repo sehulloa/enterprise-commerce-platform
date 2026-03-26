@@ -179,6 +179,13 @@ public class OrderServiceImpl implements OrderService{
 
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public Order getOrderEntityById(Long orderId) {
+        return orderRepository.findById(orderId)
+                .orElseThrow(() -> new BusinessException("Order not found with id: " + orderId));
+    }
+
     private OrderStatus resolveInitialStatus(boolean allAvailable, boolean anyAvailable) {
         if (allAvailable) {
             return OrderStatus.RESERVED;
