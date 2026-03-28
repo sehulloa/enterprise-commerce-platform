@@ -1,14 +1,44 @@
 # Enterprise Commerce Platform — Project Roadmap
 
 ## Phase 1 — Inicialización del proyecto ✔
+- Creación del repositorio
+- Configuración inicial
+
 ## Phase 2 — Configuración base ✔
+- Gradle multi-module
+- Configuración base de Spring Boot
+
 ## Phase 3 — Common Module ✔
+- Clases compartidas
+- Configuración común
+
 ## Phase 4 — Identity Access ✔
+- Seguridad
+- JWT
+- Configuración de autenticación/autorización
+
 ## Phase 5 — Orders Module ✔
+- Creación de órdenes
+- Consulta de órdenes
+
 ## Phase 6 — Catalog Module ✔
+- Productos
+- Precios
+
 ## Phase 7 — Inventory Module ✔
+- Stock
+- Reservas
+
 ## Phase 8 — Payments Module ✔
+- Creación de pagos
+- Confirmación de pagos
+- Validaciones
+- Publicación de eventos
+
 ## Phase 9 — Testing ✔
+- Unit tests
+- Integration tests
+- Hardening
 
 ---
 
@@ -16,19 +46,19 @@
 
 Objetivo:
 - Alinear documentación con implementación real
-- Estandarizar estructura de módulos
-- Revisar dependencias entre módulos
-- Corregir inconsistencias (naming, packages, ubicación de clases)
-- Eliminar código muerto o innecesario
+- Limpieza de dependencias
+- Estandarización de módulos
+- Definición de convenciones técnicas
 
 ---
 
-## Próximas fases (tentativas)
+## Próximas fases
 
-### Phase 11 — Branches Module
-### Phase 12 — Events (RabbitMQ)
-### Phase 13 — Notifications
-### Phase 14 — API Documentation (Swagger/OpenAPI)
-### Phase 15 — Testing Stabilization (Testcontainers)
-### Phase 16 — Dockerization
-### Phase 17 — CI/CD (Jenkins + SonarQube)
+### Phase 11 — Customers Module
+### Phase 12 — Branches Module
+### Phase 13 — Events (RabbitMQ)
+### Phase 14 — Notifications
+### Phase 15 — API Documentation (Swagger/OpenAPI)
+### Phase 16 — Testing Stabilization (Testcontainers)
+### Phase 17 — Dockerization
+### Phase 18 — CI/CD (Jenkins + SonarQube)
