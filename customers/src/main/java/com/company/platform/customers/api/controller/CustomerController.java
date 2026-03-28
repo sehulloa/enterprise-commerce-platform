@@ -4,6 +4,7 @@ import com.company.platform.common.api.response.ApiResponse;
 import com.company.platform.common.api.response.ApiResponseFactory;
 import com.company.platform.customers.api.dto.CreateCustomerRequest;
 import com.company.platform.customers.api.dto.CustomerResponse;
+import com.company.platform.customers.api.dto.UpdateCustomerStatusRequest;
 import com.company.platform.customers.application.service.CustomerService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -44,6 +45,18 @@ public class CustomerController {
         List<CustomerResponse> response = customerService.getAllCustomers();
 
         return ResponseEntity.ok(ApiResponseFactory.success(response, "Customers retrieved successfully")
+        );
+    }
+
+    @PutMapping("/{id}/status")
+    public ResponseEntity<ApiResponse<CustomerResponse>> updateCustomerStatus(
+            @PathVariable Long id,
+            @Valid @RequestBody UpdateCustomerStatusRequest request
+    ) {
+        CustomerResponse response = customerService.updateCustomerStatus(id, request);
+
+        return ResponseEntity.ok(
+                ApiResponseFactory.success(response, "Customer status updated successfully")
         );
     }
 

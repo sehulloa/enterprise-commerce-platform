@@ -4,6 +4,7 @@ import com.company.platform.common.api.exception.BusinessException;
 import com.company.platform.common.api.exception.NotFoundException;
 import com.company.platform.customers.api.dto.CreateCustomerRequest;
 import com.company.platform.customers.api.dto.CustomerResponse;
+import com.company.platform.customers.api.dto.UpdateCustomerStatusRequest;
 import com.company.platform.customers.domain.enumtype.CustomerStatus;
 import com.company.platform.customers.domain.model.Customer;
 import com.company.platform.customers.infrastructure.repository.CustomerRepository;
@@ -55,6 +56,25 @@ public class CustomerServiceImpl implements CustomerService {
                 .stream()
                 .map(this::mapToResponse)
                 .toList();
+    }
+
+    @Override
+    public CustomerResponse updateCustomerStatus(Long id, UpdateCustomerStatusRequest request) {
+        Customer customer = customerRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Customer not found with id: " + id));
+
+        validateStatusChange(customer, request.getStatus());
+
+        customer.setStatus(request.getStatus());
+
+        Customer updated = customerRepository.save(customer);
+        return mapToResponse(updated);
+    }
+
+    private void validateStatusChange(Customer customer, CustomerStatus newStatus) {
+        if (customer.getStatus() == newStatus) {
+            throw new BusinessException("Customer already has status: " + newStatus);
+        }
     }
 
     private CustomerResponse mapToResponse(Customer customer) {
