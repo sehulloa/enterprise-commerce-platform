@@ -24,14 +24,24 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public CustomerResponse createCustomer(CreateCustomerRequest request) {
 
-        if (customerRepository.existsByEmail(request.getEmail())) {
-            throw new BusinessException("Customer already exists with email: " + request.getEmail());
+        String normalizedEmail = request.getEmail().trim().toLowerCase();
+
+        if (customerRepository.existsByEmail(normalizedEmail)) {
+            throw new BusinessException("Customer already exists with email: " + normalizedEmail);
+        }
+
+        if (request.getFirstName().trim().isEmpty()) {
+            throw new BusinessException("First name cannot be empty");
+        }
+
+        if (request.getLastName().trim().isEmpty()) {
+            throw new BusinessException("Last name cannot be empty");
         }
 
         Customer customer = new Customer();
-        customer.setFirstName(request.getFirstName());
-        customer.setLastName(request.getLastName());
-        customer.setEmail(request.getEmail());
+        customer.setFirstName(request.getFirstName().trim());
+        customer.setLastName(request.getLastName().trim());
+        customer.setEmail(normalizedEmail);
         customer.setPhone(request.getPhone());
         customer.setStatus(CustomerStatus.ACTIVE);
 
