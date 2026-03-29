@@ -2,6 +2,7 @@ package com.company.platform.branches.application.service;
 
 import com.company.platform.branches.api.dto.BranchResponse;
 import com.company.platform.branches.api.dto.CreateBranchRequest;
+import com.company.platform.branches.api.dto.UpdateBranchStatusRequest;
 import com.company.platform.branches.domain.enumtype.BranchStatus;
 import com.company.platform.branches.domain.model.Branch;
 import com.company.platform.branches.infrastructure.repository.BranchRepository;
@@ -56,6 +57,26 @@ public class BranchServiceImpl implements BranchService {
                 .stream()
                 .map(this::mapToResponse)
                 .toList();
+
+    }
+
+    @Override
+    public BranchResponse updateBranchStatus(Long id, UpdateBranchStatusRequest request) {
+        Branch branch = branchRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Branch not found with id: " + id));
+
+        validateStatusChange(branch, request.getStatus());
+
+        branch.setStatus(request.getStatus());
+
+        Branch updated = branchRepository.save(branch);
+        return mapToResponse(updated);
+    }
+
+    private void validateStatusChange(Branch branch, BranchStatus newStatus) {
+        if (branch.getStatus() == newStatus) {
+            throw new BusinessException("Branch already has status: " + newStatus);
+        }
 
     }
 
