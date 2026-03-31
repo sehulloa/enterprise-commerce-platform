@@ -52,13 +52,30 @@ Objetivo:
 
 ---
 
-## Próximas fases
+### Phase 10 — Technical Reorganization ✔
 
-### Phase 11 — Customers Module
-### Phase 12 — Branches Module
-### Phase 13 — Events (RabbitMQ)
-### Phase 14 — Notifications
-### Phase 15 — API Documentation (Swagger/OpenAPI)
-### Phase 16 — Testing Stabilization (Testcontainers)
-### Phase 17 — Dockerization
-### Phase 18 — CI/CD (Jenkins + SonarQube)
+### Phase 11 — Customers ✔
+
+### Phase 12 — Branches ✔
+
+### Phase 13 — Events (RabbitMQ) ✔
+
+### Phase 14 — Notifications ✔
+
+---
+
+### Phase 15 — API Documentation (Swagger / OpenAPI)
+
+- Document all endpoints
+- Enable Swagger UI
+- Standardize API responses
+- Keep controllers clean (no overengineering)
+
+---
+
+### Future Phases
+
+- Testing stabilization (Testcontainers fix)
+- Observability (logs, tracing)
+- Security hardening
+- Microservices extraction
