@@ -29,7 +29,7 @@ public class PaymentResponse {
     @Schema(description = "Payment method", example = "CREDIT_CARD")
     private PaymentMethod method;
 
-    @Schema(description = "Transaction ID", example = "TXN-123456")
+    @Schema(description = "Reference", example = "TXN-123456")
     private String reference;
 
     @Schema(description = "Creation date", example = "2026-03-31T20:15:30")
