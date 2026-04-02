@@ -9,5 +9,7 @@ dependencies {
     testCompileOnly "org.projectlombok:lombok:${rootProject.ext.lombokVersion}"
     testAnnotationProcessor "org.projectlombok:lombok:${rootProject.ext.lombokVersion}"
 
+    implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${rootProject.ext.springdocVersion}"
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
