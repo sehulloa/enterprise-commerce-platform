@@ -6,6 +6,9 @@ import com.company.platform.customers.api.dto.CreateCustomerRequest;
 import com.company.platform.customers.api.dto.CustomerResponse;
 import com.company.platform.customers.api.dto.UpdateCustomerStatusRequest;
 import com.company.platform.customers.application.service.CustomerService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name = "Customers", description = "Operations related to customer management")
 @RestController
 @RequestMapping("/customers")
 @RequiredArgsConstructor
@@ -21,6 +25,15 @@ public class CustomerController {
     private final CustomerService customerService;
 
     @PostMapping
+    @Operation(
+            summary = "Create customer",
+            description = "Creates a new customer"
+    )
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Customer created successfully"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Invalid request"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "Internal server error")
+    })
     public ResponseEntity<ApiResponse<CustomerResponse>> createCustomer(
             @Valid @RequestBody CreateCustomerRequest request
     ) {
@@ -31,6 +44,15 @@ public class CustomerController {
     }
 
     @GetMapping("/{id}")
+    @Operation(
+            summary = "Get customer by ID",
+            description = "Retrieves a customer by ID"
+    )
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Customer retrieved successfully"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Customer not found"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "Internal server error")
+    })
     public ResponseEntity<ApiResponse<CustomerResponse>> getCustomerById(
             @PathVariable Long id
     ) {
@@ -41,6 +63,14 @@ public class CustomerController {
     }
 
     @GetMapping
+    @Operation(
+            summary = "Get all customers",
+            description = "Retrieves all customers"
+    )
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Customers retrieved successfully"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "Internal server error")
+    })
     public ResponseEntity<ApiResponse<List<CustomerResponse>>> getAllCustomers() {
         List<CustomerResponse> response = customerService.getAllCustomers();
 
@@ -49,6 +79,16 @@ public class CustomerController {
     }
 
     @PutMapping("/{id}/status")
+    @Operation(
+            summary = "Update customer status",
+            description = "Updates the status of an existing customer"
+    )
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Customer status updated successfully"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Invalid request"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Customer not found"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "Internal server error")
+    })
     public ResponseEntity<ApiResponse<CustomerResponse>> updateCustomerStatus(
             @PathVariable Long id,
             @Valid @RequestBody UpdateCustomerStatusRequest request

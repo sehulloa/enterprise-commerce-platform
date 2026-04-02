@@ -32,7 +32,10 @@ public class SecurityConfig {
                                 "/auth/**",
                                 "/actuator/**",
                                 "/test-log",
-                                "/test-error"
+                                "/test-error",
+                                "/swagger-ui.html",
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )

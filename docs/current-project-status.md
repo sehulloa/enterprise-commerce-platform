@@ -2,13 +2,16 @@
 
 ## Implemented Modules
 
-- common
-- identity-access
-- catalog
-- inventory
-- orders
-- payments
-- app
+- common ✔
+- identity-access ✔
+- catalog ✔
+- inventory ✔
+- orders ✔
+- payments ✔
+- customers ✔
+- branches ✔
+- notifications ✔
+- app ✔
 
 ---
 
@@ -26,18 +29,25 @@
 - Stock management
 - Reservations
 
-### Orders
-- Order creation
-- Order retrieval
-- Integration with catalog (pricing)
-- Integration with inventory
+#### Orders
+- Create order ✔
+- Order pricing ✔
+- Integration with catalog ✔
 
-### Payments
-- Payment creation
-- Payment confirmation
-- Business validations
-- Event publication
-- Hardening
+#### Payments
+- Create payment ✔
+- Confirm payment ✔
+- Validations ✔
+
+#### Events (RabbitMQ)
+- OrderCreatedEvent ✔
+- PaymentConfirmedEvent ✔
+- Exchange + queues ✔
+- Bindings ✔
+
+#### Notifications
+- Event listeners ✔
+- Notification handling ✔
 
 ## Modules In Progress / Pending
 
@@ -76,12 +86,12 @@
 
 ---
 
-## Current Phase
+### Current Phase
 
-**Phase 10 — Technical Reorganization**
+👉 Phase 15 — API Documentation ✔
 
-Focus:
-- Align documentation with real implementation
-- Standardize module structure
-- Clean dependencies
-- Define project conventions
+---
+
+### Next Phase
+
+👉 Phase 16 — API Response Standardization & Error Handling

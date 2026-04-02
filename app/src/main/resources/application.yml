@@ -45,3 +45,11 @@ logging:
     org.springframework: INFO
     org.hibernate.SQL: WARN
     com.company.platform: DEBUG
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operationSorter: method
+    tagsSorter: alpha

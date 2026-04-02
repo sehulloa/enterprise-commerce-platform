@@ -9,6 +9,9 @@ import com.company.platform.orders.api.dto.OrderResponse;
 import com.company.platform.orders.application.service.OrderService;
 import com.company.platform.orders.domain.model.Order;
 import com.company.platform.orders.domain.model.OrderItem;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name = "Orders", description = "Operations related to order management")
 @RestController
 @RequestMapping("/orders")
 @RequiredArgsConstructor
@@ -24,6 +28,16 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping
+    @Operation(
+            summary = "Create order",
+            description = "Creates a new order for a customer in a branch with the provided items"
+    )
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "Order created successfully"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Invalid request"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Related resource not found"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "Internal server error")
+    })
     public ResponseEntity<ApiResponse<OrderResponse>> createOrder(@RequestBody CreateOrderRequest request) {
         Order order = orderService.createOrder(request);
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -31,6 +45,15 @@ public class OrderController {
     }
 
     @GetMapping("/{id}")
+    @Operation(
+            summary = "Get order by ID",
+            description = "Retrieves an order by its ID"
+    )
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Order retrieved successfully"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Order not found"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "Internal server error")
+    })
     public ResponseEntity<ApiResponse<OrderResponse>> getById(@PathVariable Long id) {
         Order order = orderService.findById(id)
                 .orElseThrow(() -> new NotFoundException("Order not found with id: " + id));
@@ -39,7 +62,16 @@ public class OrderController {
                 .ok(ApiResponseFactory.success(toResponse(order), "Order retrieved successfully"));
     }
 
+
     @GetMapping("/customer/{customerId}")
+    @Operation(
+            summary = "Get orders by customer",
+            description = "Retrieves all orders for the specified customer"
+    )
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Orders retrieved successfully"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "Internal server error")
+    })
     public ResponseEntity<ApiResponse<List<OrderResponse>>> getByCustomerId(@PathVariable Long customerId) {
         List<OrderResponse> responses = orderService.findByCustomerId(customerId)
                 .stream()
@@ -51,6 +83,14 @@ public class OrderController {
     }
 
     @GetMapping("/branch/{branchId}")
+    @Operation(
+            summary = "Get orders by branch",
+            description = "Retrieves all orders for the specified branch"
+    )
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Orders retrieved successfully"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "Internal server error")
+    })
     public ResponseEntity<ApiResponse<List<OrderResponse>>> getByBranchId(@PathVariable Long branchId) {
         List<OrderResponse> responses = orderService.findByBranchId(branchId)
                 .stream()
@@ -62,6 +102,16 @@ public class OrderController {
     }
 
     @PostMapping("/{orderId}/confirm")
+    @Operation(
+            summary = "Confirm order",
+            description = "Confirms an existing order"
+    )
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Order confirmed successfully"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Order not found"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Order cannot be confirmed"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "Internal server error")
+    })
     public ResponseEntity<ApiResponse<OrderResponse>> confirmOrder(
             @PathVariable Long orderId) {
 
@@ -73,6 +123,16 @@ public class OrderController {
     }
 
     @PostMapping("/{orderId}/cancel")
+    @Operation(
+            summary = "Cancel order",
+            description = "Cancels an existing order"
+    )
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Order cancelled successfully"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Order not found"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Order cannot be cancelled"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "Internal server error")
+    })
     public ResponseEntity<ApiResponse<OrderResponse>> cancelOrder(
             @PathVariable Long orderId) {
 
@@ -82,7 +142,6 @@ public class OrderController {
                 ApiResponseFactory.success(response, "Order cancelled successfully")
         );
     }
-
 
     private OrderResponse toResponse(Order order) {
 

@@ -6,6 +6,9 @@ import com.company.platform.branches.api.dto.UpdateBranchStatusRequest;
 import com.company.platform.branches.application.service.BranchService;
 import com.company.platform.common.api.response.ApiResponse;
 import com.company.platform.common.api.response.ApiResponseFactory;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name = "Branches", description = "Operations related to branch management")
 @RestController
 @RequestMapping("/branches")
 @RequiredArgsConstructor
@@ -21,6 +25,15 @@ public class BranchController {
     private final BranchService branchService;
 
     @PostMapping
+    @Operation(
+            summary = "Create branch",
+            description = "Creates a new branch"
+    )
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Branch created successfully"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Invalid request"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "Internal server error")
+    })
     public ResponseEntity<ApiResponse<BranchResponse>> createBranch(
             @Valid @RequestBody CreateBranchRequest request
     ) {
@@ -32,6 +45,15 @@ public class BranchController {
     }
 
     @GetMapping("/{id}")
+    @Operation(
+            summary = "Get branch by ID",
+            description = "Retrieves a branch by ID"
+    )
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Branch retrieved successfully"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Branch not found"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "Internal server error")
+    })
     public ResponseEntity<ApiResponse<BranchResponse>> getBranchById(
             @PathVariable Long id
     ) {
@@ -43,6 +65,14 @@ public class BranchController {
     }
 
     @GetMapping
+    @Operation(
+            summary = "Get all branches",
+            description = "Retrieves all branches"
+    )
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Branches retrieved successfully"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "Internal server error")
+    })
     public ResponseEntity<ApiResponse<List<BranchResponse>>> getAllBranches() {
         List<BranchResponse> response = branchService.getAllBranches();
 
@@ -52,6 +82,16 @@ public class BranchController {
     }
 
     @PutMapping("/{id}/status")
+    @Operation(
+            summary = "Update branch status",
+            description = "Updates the status of an existing branch"
+    )
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Branch status updated successfully"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Invalid request"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Branch not found"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "Internal server error")
+    })
     public ResponseEntity<ApiResponse<BranchResponse>> updateBranchStatus(
             @PathVariable Long id,
             @Valid @RequestBody UpdateBranchStatusRequest request
