@@ -19,6 +19,7 @@ public class ApiResponse<T> {
     private final boolean success;
 
     @Schema(description = "Response message", example = "Order created successfully")
+
     private final String message;
 
     @Schema(description = "Response data payload")
