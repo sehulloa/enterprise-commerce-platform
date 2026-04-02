@@ -64,16 +64,32 @@ Objetivo:
 
 ---
 
-### Phase 15 — API Documentation (Swagger / OpenAPI)
+### Phase 15 — API Documentation (Swagger / OpenAPI) ✔
 
-- Document all endpoints
-- Enable Swagger UI
-- Standardize API responses
-- Keep controllers clean (no overengineering)
+- Documented all API endpoints
+- Swagger UI enabled and accessible
+- Consistent documentation across modules:
+    - orders
+    - payments
+    - customers
+    - branches
+    - catalog
+    - inventory
+    - authentication
+- Controllers kept clean (minimal annotations)
 
 ---
 
 ### Future Phases
+
+### Phase 16 — API Response Standardization & Error Handling
+
+- Standardize ApiResponse structure
+- Global exception handling (@ControllerAdvice)
+- Consistent error responses
+- Validation error formatting
+
+---
 
 - Testing stabilization (Testcontainers fix)
 - Observability (logs, tracing)

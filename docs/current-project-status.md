@@ -88,10 +88,10 @@
 
 ### Current Phase
 
-👉 Phase 14 — Notifications ✔
+👉 Phase 15 — API Documentation ✔
 
 ---
 
 ### Next Phase
 
-👉 Phase 15 — API Documentation (Swagger / OpenAPI)
+👉 Phase 16 — API Response Standardization & Error Handling
