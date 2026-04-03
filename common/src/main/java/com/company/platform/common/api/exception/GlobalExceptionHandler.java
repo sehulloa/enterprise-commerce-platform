@@ -9,6 +9,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.stream.Collectors;
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -38,12 +40,16 @@ public class GlobalExceptionHandler {
         String errorMessage = ex.getBindingResult()
                 .getFieldErrors()
                 .stream()
-                .findFirst()
                 .map(error -> error.getField() + ": " + error.getDefaultMessage())
-                .orElse("Request validation error");
+                .distinct()
+                .collect(Collectors.joining(", "));
+
+        if(errorMessage.isBlank()) {
+            errorMessage = "Request validation error";
+        }
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(ApiResponseFactory.error(errorMessage, "Validation error"));
+                .body(ApiResponseFactory.error("Validation error", errorMessage));
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
