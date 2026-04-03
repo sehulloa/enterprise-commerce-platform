@@ -14,12 +14,15 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Validated
 @Tag(name = "Payments", description = "Operations related to payment management")
 @RestController
 @RequestMapping("/payments")
@@ -92,7 +95,7 @@ public class PaymentController {
                 content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
     })
     public ResponseEntity<ApiResponse<PaymentResponse>> confirmPayment(
-            @PathVariable Long paymentId,
+            @PathVariable @Min(1) Long paymentId,
             @Valid @RequestBody ConfirmPaymentRequest request
     ) {
         PaymentResponse response = paymentService.confirmPayment(paymentId, request);
@@ -117,7 +120,7 @@ public class PaymentController {
                 content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
     })
     public ResponseEntity<ApiResponse<PaymentResponse>> failPayment(
-            @PathVariable Long paymentId,
+            @PathVariable @Min(1) Long paymentId,
             @Valid @RequestBody UpdatePaymentStatusRequest request
     ) {
         PaymentResponse response = paymentService.failPayment(paymentId, request);
@@ -143,7 +146,7 @@ public class PaymentController {
                 content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
     })
     public ResponseEntity<ApiResponse<PaymentResponse>> cancelPayment(
-            @PathVariable Long paymentId,
+            @PathVariable @Min(1) Long paymentId,
             @Valid @RequestBody UpdatePaymentStatusRequest request
     ) {
         PaymentResponse response = paymentService.cancelPayment(paymentId, request);

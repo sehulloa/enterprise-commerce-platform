@@ -13,12 +13,15 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Validated
 @Tag(name = "Branches", description = "Operations related to branch management")
 @RestController
 @RequestMapping("/branches")
@@ -64,7 +67,7 @@ public class BranchController {
                 content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
     })
     public ResponseEntity<ApiResponse<BranchResponse>> getBranchById(
-            @PathVariable Long id
+            @PathVariable @Min(1) Long id
     ) {
         BranchResponse response = branchService.getBranchById(id);
 
@@ -108,7 +111,7 @@ public class BranchController {
                 content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
     })
     public ResponseEntity<ApiResponse<BranchResponse>> updateBranchStatus(
-            @PathVariable Long id,
+            @PathVariable @Min(1) Long id,
             @Valid @RequestBody UpdateBranchStatusRequest request
     ) {
         BranchResponse response = branchService.updateBranchStatus(id, request);

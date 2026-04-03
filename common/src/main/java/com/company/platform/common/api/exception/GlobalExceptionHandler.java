@@ -2,7 +2,7 @@ package com.company.platform.common.api.exception;
 
 import com.company.platform.common.api.response.ApiErrorResponse;
 import com.company.platform.common.api.response.ApiResponseFactory;
-import org.hibernate.exception.ConstraintViolationException;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -54,8 +54,19 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ApiErrorResponse> handleConstraintViolation(ConstraintViolationException ex) {
+
+        String errorMessage = ex.getConstraintViolations()
+                .stream()
+                .map(violation -> violation.getPropertyPath() + ": " + violation.getMessage())
+                .distinct()
+                .collect(Collectors.joining(", "));
+
+        if (errorMessage.isBlank()) {
+            errorMessage = "Constraint violation";
+        }
+
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(ApiResponseFactory.error(ex.getMessage(), "Constraint violation"));
+                .body(ApiResponseFactory.error("Validation error", errorMessage));
     }
 
     @ExceptionHandler(Exception.class)

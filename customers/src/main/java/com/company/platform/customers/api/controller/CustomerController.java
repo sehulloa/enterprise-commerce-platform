@@ -13,12 +13,15 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Validated
 @Tag(name = "Customers", description = "Operations related to customer management")
 @RestController
 @RequestMapping("/customers")
@@ -63,7 +66,7 @@ public class CustomerController {
                 content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
     })
     public ResponseEntity<ApiResponse<CustomerResponse>> getCustomerById(
-            @PathVariable Long id
+            @PathVariable @Min(1) Long id
     ) {
         CustomerResponse response = customerService.getCustomerById(id);
 
@@ -109,7 +112,7 @@ public class CustomerController {
                 content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
     })
     public ResponseEntity<ApiResponse<CustomerResponse>> updateCustomerStatus(
-            @PathVariable Long id,
+            @PathVariable @Min(1) Long id,
             @Valid @RequestBody UpdateCustomerStatusRequest request
     ) {
         CustomerResponse response = customerService.updateCustomerStatus(id, request);

@@ -18,13 +18,16 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Validated
 @Tag(name = "Catalog", description = "Operations related to catalog management")
 @RestController
 @RequestMapping("/catalog")
@@ -109,7 +112,7 @@ public class CatalogController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "Internal server error",
                 content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
     })
-    public ResponseEntity<ApiResponse<ProductResponse>> findProductById(@PathVariable Long productId) {
+    public ResponseEntity<ApiResponse<ProductResponse>> findProductById(@PathVariable @Min(1) Long productId) {
         ProductResponse product = catalogQueryService.findProductById(productId);
         return ResponseEntity
                 .ok(ApiResponseFactory.success(product, "Product retrieved successfully"));

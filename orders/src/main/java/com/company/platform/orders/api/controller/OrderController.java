@@ -15,13 +15,16 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Validated
 @Tag(name = "Orders", description = "Operations related to order management")
 @RestController
 @RequestMapping("/orders")
@@ -68,7 +71,7 @@ public class OrderController {
                 description = "Internal server error",
                 content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
     })
-    public ResponseEntity<ApiResponse<OrderResponse>> getById(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<OrderResponse>> getById(@PathVariable @Min(1) Long id) {
         Order order = orderService.findById(id)
                 .orElseThrow(() -> new NotFoundException("Order not found with id: " + id));
 
@@ -89,7 +92,7 @@ public class OrderController {
                 description = "Internal server error",
                 content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
     })
-    public ResponseEntity<ApiResponse<List<OrderResponse>>> getByCustomerId(@PathVariable Long customerId) {
+    public ResponseEntity<ApiResponse<List<OrderResponse>>> getByCustomerId(@PathVariable @Min(1) Long customerId) {
         List<OrderResponse> responses = orderService.findByCustomerId(customerId)
                 .stream()
                 .map(this::toResponse)
@@ -111,7 +114,7 @@ public class OrderController {
                 description = "Internal server error",
                 content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
     })
-    public ResponseEntity<ApiResponse<List<OrderResponse>>> getByBranchId(@PathVariable Long branchId) {
+    public ResponseEntity<ApiResponse<List<OrderResponse>>> getByBranchId(@PathVariable @Min(1) Long branchId) {
         List<OrderResponse> responses = orderService.findByBranchId(branchId)
                 .stream()
                 .map(this::toResponse)
@@ -137,7 +140,7 @@ public class OrderController {
                 content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
     })
     public ResponseEntity<ApiResponse<OrderResponse>> confirmOrder(
-            @PathVariable Long orderId) {
+            @PathVariable @Min(1) Long orderId) {
 
         OrderResponse response = orderService.confirmOrder(orderId);
 
@@ -162,7 +165,7 @@ public class OrderController {
                 content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
     })
     public ResponseEntity<ApiResponse<OrderResponse>> cancelOrder(
-            @PathVariable Long orderId) {
+            @PathVariable @Min(1) Long orderId) {
 
         OrderResponse response = orderService.cancelOrder(orderId);
 
