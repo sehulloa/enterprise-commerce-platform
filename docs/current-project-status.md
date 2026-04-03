@@ -86,12 +86,12 @@
 
 ---
 
-### Current Phase
+#### Current Phase
 
-👉 Phase 15 — API Documentation ✔
+👉 Phase 16 — API Response Standardization & Error Handling ✔
 
 ---
 
 ### Next Phase
 
-👉 Phase 16 — API Response Standardization & Error Handling
+👉 Phase 17 — Observability (Logging & Traceability)

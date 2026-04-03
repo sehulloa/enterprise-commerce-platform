@@ -80,18 +80,27 @@ Objetivo:
 
 ---
 
-### Future Phases
+### Phase 16 — API Response Standardization & Error Handling ✔
 
-### Phase 16 — API Response Standardization & Error Handling
+- Documented ApiResponse and ApiErrorResponse in OpenAPI
+- Linked standard success and error wrappers in controllers
+- Hardened global exception handling
+- Improved request body validation error formatting
+- Added request parameter/path validation handling
+- Kept Swagger documentation clean without overloading controllers
 
-- Standardize ApiResponse structure
-- Global exception handling (@ControllerAdvice)
-- Consistent error responses
-- Validation error formatting
+## Future Phases
 
----
+### Phase 17 — Observability (Logging & Traceability)
 
-- Testing stabilization (Testcontainers fix)
-- Observability (logs, tracing)
-- Security hardening
-- Microservices extraction
+### Phase 18 — Security Hardening
+
+### Phase 19 — Testing Stabilization
+
+### Phase 20 — API Hardening
+
+### Phase 21 — Observability (Metrics & Monitoring)
+
+### Phase 22 — CI/CD Hardening
+
+### Phase 23 — Microservices Readiness
