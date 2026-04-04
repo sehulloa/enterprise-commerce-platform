@@ -28,14 +28,23 @@ public class CorrelationIdFilter  extends OncePerRequestFilter {
             correlationId = UUID.randomUUID().toString();
         }
 
+        long startTime = System.currentTimeMillis();
+
         MDC.put(MDC_KEY, correlationId);
         response.setHeader(CORRELATION_ID_HEADER, correlationId);
 
         try {
             filterChain.doFilter(request, response);
         } finally {
-            MDC.clear();
-        }
+            long durationMs = System.currentTimeMillis() - startTime;
 
+            log.info("HTTP {} {} completed with status={} in {} ms",
+                    request.getMethod(),
+                    request.getRequestURI(),
+                    response.getStatus(),
+                    durationMs);
+
+            MDC.remove(MDC_KEY);
+        }
     }
 }
