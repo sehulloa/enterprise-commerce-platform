@@ -10,12 +10,14 @@ import com.company.platform.payments.domain.enumtype.PaymentStatus;
 import com.company.platform.payments.domain.model.Payment;
 import com.company.platform.payments.infrastructure.repository.PaymentRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -28,6 +30,11 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public PaymentResponse createPayment(CreatePaymentRequest request) {
+
+        log.info("Creating payment for orderId={} amount={} method={}",
+                request.getOrderId(),
+                request.getAmount(),
+                request.getMethod());
 
         validateNoActivePayment(request.getOrderId());
 
@@ -44,6 +51,12 @@ public class PaymentServiceImpl implements PaymentService {
         payment.setStatus(PaymentStatus.PENDING);
 
         Payment saved = paymentRepository.save(payment);
+
+        log.info("Payment created successfully with paymentId={} orderId={} status={}",
+                saved.getId(),
+                saved.getOrderId(),
+                saved.getStatus());
+
         return mapToResponse(saved);
     }
 
@@ -58,6 +71,9 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public PaymentResponse confirmPayment(Long paymentId, ConfirmPaymentRequest request) {
+
+        log.info("Confirming payment with paymentId={}", paymentId);
+
         Payment payment = paymentRepository.findById(paymentId)
                 .orElseThrow(() -> new NotFoundException("Payment not found with id: " + paymentId));
 
@@ -80,11 +96,18 @@ public class PaymentServiceImpl implements PaymentService {
                 )
         );
 
+        log.info("Payment confirmed successfully with paymentId={} orderId={} status={}",
+                savedPayment.getId(),
+                savedPayment.getOrderId(),
+                savedPayment.getStatus());
+
         return mapToResponse(savedPayment);
     }
 
     @Override
     public PaymentResponse failPayment(Long paymentId, UpdatePaymentStatusRequest request) {
+
+        log.info("Marking payment as failed for paymentId={}", paymentId);
 
         Payment payment = paymentRepository.findById(paymentId)
                 .orElseThrow(() -> new BusinessException("Payment not found"));
@@ -95,11 +118,18 @@ public class PaymentServiceImpl implements PaymentService {
         payment.setStatus(PaymentStatus.FAILED);
 
         Payment updated = paymentRepository.save(payment);
+
+        log.info("Payment marked as failed with paymentId={} status={}",
+                updated.getId(),
+                updated.getStatus());
+
         return mapToResponse(updated);
     }
 
     @Override
     public PaymentResponse cancelPayment(Long paymentId, UpdatePaymentStatusRequest request) {
+
+        log.info("Cancelling payment with paymentId={}", paymentId);
 
         Payment payment = paymentRepository.findById(paymentId)
                 .orElseThrow(() -> new BusinessException("Payment not found"));
@@ -110,6 +140,11 @@ public class PaymentServiceImpl implements PaymentService {
         payment.setStatus(PaymentStatus.CANCELLED);
 
         Payment updated = paymentRepository.save(payment);
+
+        log.info("Payment cancelled successfully with paymentId={} status={}",
+                updated.getId(),
+                updated.getStatus());
+
         return mapToResponse(updated);
     }
 

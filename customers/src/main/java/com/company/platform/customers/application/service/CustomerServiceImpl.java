@@ -9,11 +9,13 @@ import com.company.platform.customers.domain.enumtype.CustomerStatus;
 import com.company.platform.customers.domain.model.Customer;
 import com.company.platform.customers.infrastructure.repository.CustomerRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -23,6 +25,8 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public CustomerResponse createCustomer(CreateCustomerRequest request) {
+
+        log.info("Creating customer with email={}", request.getEmail());
 
         String normalizedEmail = request.getEmail().trim().toLowerCase();
 
@@ -46,6 +50,11 @@ public class CustomerServiceImpl implements CustomerService {
         customer.setStatus(CustomerStatus.ACTIVE);
 
         Customer saved = customerRepository.save(customer);
+
+        log.info("Customer created successfully with customerId={} email={}",
+                saved.getId(),
+                saved.getEmail());
+
         return mapToResponse(saved);
     }
 
@@ -70,6 +79,11 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public CustomerResponse updateCustomerStatus(Long id, UpdateCustomerStatusRequest request) {
+
+        log.info("Updating customer status for customerId={} newStatus={}",
+                id,
+                request.getStatus());
+
         Customer customer = customerRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Customer not found with id: " + id));
 
@@ -78,6 +92,11 @@ public class CustomerServiceImpl implements CustomerService {
         customer.setStatus(request.getStatus());
 
         Customer updated = customerRepository.save(customer);
+
+        log.info("Customer status updated successfully for customerId={} status={}",
+                updated.getId(),
+                updated.getStatus());
+
         return mapToResponse(updated);
     }
 

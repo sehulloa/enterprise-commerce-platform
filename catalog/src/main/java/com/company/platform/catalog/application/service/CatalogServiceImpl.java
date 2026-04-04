@@ -11,10 +11,12 @@ import com.company.platform.catalog.infrastructure.repository.ProductPriceReposi
 import com.company.platform.catalog.infrastructure.repository.ProductRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CatalogServiceImpl implements CatalogService {
@@ -26,15 +28,27 @@ public class CatalogServiceImpl implements CatalogService {
     @Override
     public Category createCategory(CreateCategoryRequest request) {
 
+        log.info("Creating category with name={}", request.getName());
+
         Category category = new Category();
         category.setName(request.getName());
         category.setDescription(request.getDescription());
 
-        return categoryRepository.save(category);
+        Category saved = categoryRepository.save(category);
+
+        log.info("Category created successfully with categoryId={} name={}",
+                saved.getId(),
+                saved.getName());
+
+        return saved;
     }
 
     @Override
     public Product createProduct(CreateProductRequest request) {
+
+        log.info("Creating product with sku={} categoryId={}",
+                request.getSku(),
+                request.getCategoryId());
 
         Category category = categoryRepository.findById(request.getCategoryId())
                 .orElseThrow(() -> new RuntimeException("Category not found"));
@@ -46,12 +60,22 @@ public class CatalogServiceImpl implements CatalogService {
         product.setDescription(request.getDescription());
         product.setCategory(category);
 
-        return productRepository.save(product);
+        Product saved = productRepository.save(product);
+
+        log.info("Product created successfully with productId={} sku={}",
+                saved.getId(),
+                saved.getSku());
+
+        return saved;
     }
 
     @Override
     @Transactional
     public ProductPrice setProductPrice(CreateProductPriceRequest request) {
+
+        log.info("Setting product price for productId={} price={}",
+                request.getProductId(),
+                request.getPrice());
 
         Product product = productRepository.findById(request.getProductId())
                 .orElseThrow(() -> new RuntimeException("Product not found"));
@@ -73,7 +97,10 @@ public class CatalogServiceImpl implements CatalogService {
                         : LocalDateTime.now()
         );
 
-        return productPriceRepository.save(newPrice);
+        log.info("Product price set successfully for productId={} price={}",
+                product.getId(),
+                newPrice.getPrice());
 
+        return productPriceRepository.save(newPrice);
     }
 }

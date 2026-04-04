@@ -17,6 +17,7 @@ import com.company.platform.orders.domain.model.OrderItem;
 import com.company.platform.orders.infrastructure.repository.OrderItemRepository;
 import com.company.platform.orders.infrastructure.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +25,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService{
@@ -38,6 +40,11 @@ public class OrderServiceImpl implements OrderService{
     @Transactional
     @Override
     public Order createOrder(CreateOrderRequest request) {
+
+        log.info("Creating order for customerId={} branchId={} items={}",
+                request.getCustomerId(),
+                request.getBranchId(),
+                request.getItems().size());
 
         // Crea el Order
         Order order = new Order();
@@ -107,6 +114,11 @@ public class OrderServiceImpl implements OrderService{
                         .build()
         );
 
+        log.info("Order created successfully with orderId={} status={} totalAmount={}",
+                finalOrder.getId(),
+                finalOrder.getStatus(),
+                finalOrder.getTotalAmount());
+
         return finalOrder;
     }
 
@@ -134,6 +146,8 @@ public class OrderServiceImpl implements OrderService{
     @Transactional
     public OrderResponse confirmOrder(Long orderId) {
 
+        log.info("Confirming order with orderId={}", orderId);
+
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new NotFoundException("Order not found"));
 
@@ -156,13 +170,18 @@ public class OrderServiceImpl implements OrderService{
 
         Order savedOrder = orderRepository.save(order);
 
-        return mapToResponse(savedOrder);
+        log.info("Order confirmed successfully with orderId={} status={}",
+                savedOrder.getId(),
+                savedOrder.getStatus());
 
+        return mapToResponse(savedOrder);
     }
 
     @Override
     @Transactional
     public OrderResponse cancelOrder(Long orderId) {
+
+        log.info("Cancelling order with orderId={}", orderId);
 
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new NotFoundException("Order not found"));
@@ -175,8 +194,11 @@ public class OrderServiceImpl implements OrderService{
 
         Order savedOrder = orderRepository.save(order);
 
-        return mapToResponse(savedOrder);
+        log.info("Order cancelled successfully with orderId={} status={}",
+                savedOrder.getId(),
+                savedOrder.getStatus());
 
+        return mapToResponse(savedOrder);
     }
 
     @Override

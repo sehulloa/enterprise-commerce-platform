@@ -9,11 +9,13 @@ import com.company.platform.branches.infrastructure.repository.BranchRepository;
 import com.company.platform.common.api.exception.BusinessException;
 import com.company.platform.common.api.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -23,6 +25,9 @@ public class BranchServiceImpl implements BranchService {
 
     @Override
     public BranchResponse createBranch(CreateBranchRequest request) {
+
+        log.info("Creating branch with code={}", request.getCode());
+
         String normalizedCode = request.getCode().trim().toUpperCase();
 
         if (branchRepository.existsByCode(normalizedCode)) {
@@ -36,8 +41,12 @@ public class BranchServiceImpl implements BranchService {
         branch.setStatus(BranchStatus.ACTIVE);
 
         Branch saved = branchRepository.save(branch);
-        return mapToResponse(saved);
 
+        log.info("Branch created successfully with branchId={} code={}",
+                saved.getId(),
+                saved.getCode());
+
+        return mapToResponse(saved);
     }
 
     @Override
@@ -62,6 +71,11 @@ public class BranchServiceImpl implements BranchService {
 
     @Override
     public BranchResponse updateBranchStatus(Long id, UpdateBranchStatusRequest request) {
+
+        log.info("Updating branch status for branchId={} newStatus={}",
+                id,
+                request.getStatus());
+
         Branch branch = branchRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Branch not found with id: " + id));
 
@@ -70,6 +84,11 @@ public class BranchServiceImpl implements BranchService {
         branch.setStatus(request.getStatus());
 
         Branch updated = branchRepository.save(branch);
+
+        log.info("Branch status updated successfully for branchId={} status={}",
+                updated.getId(),
+                updated.getStatus());
+
         return mapToResponse(updated);
     }
 
