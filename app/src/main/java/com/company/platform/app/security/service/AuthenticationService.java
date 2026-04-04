@@ -4,11 +4,13 @@ import com.company.platform.app.security.controller.AuthRequest;
 import com.company.platform.app.security.controller.AuthResponse;
 import com.company.platform.app.security.jwt.JwtService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
@@ -18,6 +20,8 @@ public class AuthenticationService {
     private final JwtService jwtService;
 
     public AuthResponse authenticate(AuthRequest request) {
+
+        log.info("Authentication attempt for username={}", request.getUsername());
 
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -30,6 +34,8 @@ public class AuthenticationService {
                 userDetailsService.loadUserByUsername(request.getUsername());
 
         String token = jwtService.generateToken(userDetails);
+
+        log.info("Authentication successful for username={}", userDetails.getUsername());
 
         return AuthResponse.builder()
                 .token(token)

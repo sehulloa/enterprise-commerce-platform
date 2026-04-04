@@ -86,12 +86,12 @@
 
 ---
 
-#### Current Phase
+### Current Phase
 
-👉 Phase 16 — API Response Standardization & Error Handling ✔
+👉 Phase 17 — Observability (Logging & Traceability) ✔
 
 ---
 
 ### Next Phase
 
-👉 Phase 17 — Observability (Logging & Traceability)
+👉 Phase 18 — Security Hardening

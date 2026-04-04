@@ -10,9 +10,11 @@ import com.company.platform.inventory.domain.model.StockMovement;
 import com.company.platform.inventory.infrastructure.repository.InventoryItemRepository;
 import com.company.platform.inventory.infrastructure.repository.StockMovementRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class InventoryServiceImpl implements InventoryService {
@@ -23,6 +25,11 @@ public class InventoryServiceImpl implements InventoryService {
     @Override
     @Transactional
     public InventoryItem createInventoryItem(CreateInventoryItemRequest request) {
+
+        log.info("Creating inventory item for branchId={} productId={} totalQuantity={}",
+                request.getBranchId(),
+                request.getProductId(),
+                request.getTotalQuantity());
 
         inventoryItemRepository.findByBranchIdAndProductId(request.getBranchId(), request.getProductId())
                 .ifPresent(item -> {
@@ -42,12 +49,22 @@ public class InventoryServiceImpl implements InventoryService {
             saveMovement(savedItem.getId(), StockMovementType.INBOUND, request.getTotalQuantity(), "INITIAL_STOCK", "Initial stock creation");
         }
 
+        log.info("Inventory item created successfully with inventoryItemId={} branchId={} productId={}",
+                savedItem.getId(),
+                savedItem.getBranchId(),
+                savedItem.getProductId());
+
         return savedItem;
     }
 
     @Override
     @Transactional
     public InventoryItem inboundStock(AdjustStockRequest request) {
+
+        log.info("Applying inbound stock for inventoryItemId={} quantity={}",
+                request.getInventoryItemId(),
+                request.getQuantity());
+
         InventoryItem inventoryItem = findInventoryItemOrThrow(request.getInventoryItemId());
 
         inventoryItem.setTotalQuantity(inventoryItem.getTotalQuantity() + request.getQuantity());
@@ -56,13 +73,21 @@ public class InventoryServiceImpl implements InventoryService {
 
         saveMovement(savedItem.getId(), StockMovementType.INBOUND, request.getQuantity(), request.getReference(), request.getNotes());
 
+        log.info("Inbound stock applied successfully for inventoryItemId={} totalQuantity={}",
+                savedItem.getId(),
+                savedItem.getTotalQuantity());
+
         return savedItem;
     }
-
 
     @Override
     @Transactional
     public InventoryItem adjustmentIn(AdjustStockRequest request) {
+
+        log.info("Applying positive stock adjustment for inventoryItemId={} quantity={}",
+                request.getInventoryItemId(),
+                request.getQuantity());
+
         InventoryItem inventoryItem = findInventoryItemOrThrow(request.getInventoryItemId());
 
         inventoryItem.setTotalQuantity(inventoryItem.getTotalQuantity() + request.getQuantity());
@@ -71,6 +96,10 @@ public class InventoryServiceImpl implements InventoryService {
 
         saveMovement(savedItem.getId(), StockMovementType.ADJUSTMENT_IN, request.getQuantity(), request.getReference(), request.getNotes());
 
+        log.info("Positive stock adjustment applied for inventoryItemId={} totalQuantity={}",
+                savedItem.getId(),
+                savedItem.getTotalQuantity());
+
         return savedItem;
     }
 
@@ -78,6 +107,11 @@ public class InventoryServiceImpl implements InventoryService {
     @Override
     @Transactional
     public InventoryItem adjustmentOut(AdjustStockRequest request) {
+
+        log.info("Applying negative stock adjustment for inventoryItemId={} quantity={}",
+                request.getInventoryItemId(),
+                request.getQuantity());
+
         InventoryItem inventoryItem = findInventoryItemOrThrow(request.getInventoryItemId());
 
         if (inventoryItem.getTotalQuantity() - request.getQuantity() < inventoryItem.getReservedQuantity()) {
@@ -89,6 +123,10 @@ public class InventoryServiceImpl implements InventoryService {
         InventoryItem savedItem = inventoryItemRepository.save(inventoryItem);
 
         saveMovement(savedItem.getId(), StockMovementType.ADJUSTMENT_OUT, request.getQuantity(), request.getReference(), request.getNotes());
+
+        log.info("Negative stock adjustment applied for inventoryItemId={} totalQuantity={}",
+                savedItem.getId(),
+                savedItem.getTotalQuantity());
 
         return savedItem;
     }
@@ -105,6 +143,11 @@ public class InventoryServiceImpl implements InventoryService {
     @Override
     @Transactional
     public void consumeStock(Long branchId, Long productId, Integer quantity) {
+
+        log.info("Consuming stock for branchId={} productId={} quantity={}",
+                branchId,
+                productId,
+                quantity);
 
         InventoryItem item = inventoryItemRepository
                 .findByBranchIdAndProductId(branchId, productId)
@@ -127,6 +170,10 @@ public class InventoryServiceImpl implements InventoryService {
                 "ORDER_CONFIRMATION",
                 "Stock consumed by order confirmation"
         );
+
+        log.info("Stock consumed successfully for inventoryItemId={} remainingTotalQuantity={}",
+                item.getId(),
+                item.getTotalQuantity());
     }
 
     private InventoryItem findInventoryItemOrThrow(Long inventoryItemId) {

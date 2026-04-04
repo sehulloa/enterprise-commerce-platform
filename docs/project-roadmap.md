@@ -89,9 +89,19 @@ Objetivo:
 - Added request parameter/path validation handling
 - Kept Swagger documentation clean without overloading controllers
 
-## Future Phases
+---
 
-### Phase 17 — Observability (Logging & Traceability)
+### Phase 17 — Observability (Logging & Traceability) ✔
+
+- Implemented Correlation ID filter (X-Correlation-Id)
+- Added MDC traceId propagation across requests
+- Included traceId in API responses
+- Implemented request-level logging (method, path, status, duration)
+- Added business-level logging in service layer
+- Configured Logback (console + file logging)
+- Enabled and configured Spring Boot Actuator
+
+## Future Phases
 
 ### Phase 18 — Security Hardening
 
