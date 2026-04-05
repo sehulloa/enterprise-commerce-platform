@@ -33,7 +33,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: health, info, metrics, env, loggers
+        include: health, info
 
   endpoint:
     health:
@@ -53,3 +53,8 @@ springdoc:
     path: /swagger-ui.html
     operationSorter: method
     tagsSorter: alpha
+
+security:
+  jwt:
+    secret: ${JWT_SECRET:esta-es-una-clave-secreta-muy-larga-y-segura-de-al-menos-32-caracteres}
+    expiration: ${JWT_EXPIRATION:86400000}
