@@ -88,10 +88,10 @@
 
 ### Current Phase
 
-👉 Phase 17 — Observability (Logging & Traceability) ✔
+👉 Phase 18 — Security Hardening ✔
 
 ---
 
 ### Next Phase
 
-👉 Phase 18 — Security Hardening
+👉 Phase 19 — Dockerization & Runtime Profiles
