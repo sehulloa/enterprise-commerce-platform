@@ -19,6 +19,7 @@ import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,6 +34,7 @@ public class OrderController {
 
     private final OrderService orderService;
 
+    @PreAuthorize("hasAuthority('ORDER_CREATE')")
     @PostMapping
     @Operation(
             summary = "Create order",
@@ -57,6 +59,7 @@ public class OrderController {
                 .body(ApiResponseFactory.success(toResponse(order), "Order created successfully"));
     }
 
+    @PreAuthorize("hasAuthority('ORDER_READ')")
     @GetMapping("/{id}")
     @Operation(
             summary = "Get order by ID",
@@ -79,7 +82,7 @@ public class OrderController {
                 .ok(ApiResponseFactory.success(toResponse(order), "Order retrieved successfully"));
     }
 
-
+    @PreAuthorize("hasAuthority('ORDER_READ')")
     @GetMapping("/customer/{customerId}")
     @Operation(
             summary = "Get orders by customer",
@@ -102,6 +105,7 @@ public class OrderController {
                 .ok(ApiResponseFactory.success(responses, "Orders retrieved successfully"));
     }
 
+    @PreAuthorize("hasAuthority('ORDER_READ')")
     @GetMapping("/branch/{branchId}")
     @Operation(
             summary = "Get orders by branch",
@@ -124,6 +128,7 @@ public class OrderController {
                 .ok(ApiResponseFactory.success(responses, "Orders retrieved successfully"));
     }
 
+    @PreAuthorize("hasAuthority('ORDER_CONFIRM')")
     @PostMapping("/{orderId}/confirm")
     @Operation(
             summary = "Confirm order",

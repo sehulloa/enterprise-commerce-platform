@@ -1,10 +1,19 @@
-package com.company.platform.common.api.exception;
+package com.company.platform.app.api.exception;
 
+import com.company.platform.common.api.exception.BusinessException;
+import com.company.platform.common.api.exception.NotFoundException;
+import com.company.platform.common.api.exception.ValidationException;
 import com.company.platform.common.api.response.ApiErrorResponse;
 import com.company.platform.common.api.response.ApiResponseFactory;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.MalformedJwtException;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -67,6 +76,41 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(ApiResponseFactory.error("Validation error", errorMessage));
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ApiErrorResponse> handleBadCredentials(BadCredentialsException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(ApiResponseFactory.error("Authentication failed", "Bad credentials"));
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ApiErrorResponse> handleAuthenticationException(AuthenticationException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(ApiResponseFactory.error("Authentication failed", ex.getMessage()));
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ApiErrorResponse> handleAccessDenied(AccessDeniedException ex) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(ApiResponseFactory.error("Forbidden", "Access denied"));
+    }
+
+    @ExceptionHandler(ExpiredJwtException.class)
+    public ResponseEntity<ApiErrorResponse> handleExpiredJwt(ExpiredJwtException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(ApiResponseFactory.error("Authentication failed", "Token expired"));
+    }
+
+    @ExceptionHandler({
+            JwtException.class,
+            MalformedJwtException.class,
+            SecurityException.class,
+            IllegalArgumentException.class
+    })
+    public ResponseEntity<ApiErrorResponse> handleJwtException(Exception ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(ApiResponseFactory.error("Authentication failed", "Invalid token"));
     }
 
     @ExceptionHandler(Exception.class)

@@ -17,6 +17,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,6 +32,7 @@ public class PaymentController {
 
     private final PaymentService paymentService;
 
+    @PreAuthorize("hasAuthority('PAYMENT_CREATE')")
     @PostMapping
     @Operation(
             summary = "Create payment",
@@ -57,6 +59,7 @@ public class PaymentController {
                 ApiResponseFactory.success(response, "Payment created successfully"));
     }
 
+    @PreAuthorize("hasAuthority('PAYMENT_READ')")
     @GetMapping
     @Operation(
             summary = "Get payments by order",
@@ -79,6 +82,7 @@ public class PaymentController {
         );
     }
 
+    @PreAuthorize("hasAuthority('PAYMENT_CONFIRM')")
     @PostMapping("/{paymentId}/confirm")
     @Operation(
             summary = "Confirm payment",
@@ -104,6 +108,7 @@ public class PaymentController {
         );
     }
 
+    @PreAuthorize("hasAuthority('PAYMENT_UPDATE')")
     @PostMapping("/{paymentId}/fail")
     @Operation(
             summary = "Fail payment",
@@ -130,6 +135,7 @@ public class PaymentController {
         );
     }
 
+    @PreAuthorize("hasAuthority('PAYMENT_UPDATE')")
     @PostMapping("/{paymentId}/cancel")
     @Operation(
             summary = "Cancel payment",
