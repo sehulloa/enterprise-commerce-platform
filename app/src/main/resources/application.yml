@@ -58,3 +58,7 @@ security:
   jwt:
     secret: ${JWT_SECRET:esta-es-una-clave-secreta-muy-larga-y-segura-de-al-menos-32-caracteres}
     expiration: ${JWT_EXPIRATION:86400000}
+
+app:
+  security:
+    swagger-enabled: true

@@ -14,6 +14,12 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
 
+        String errorMessage = (String) request.getAttribute("auth_error");
+
+        if (errorMessage == null || errorMessage.isBlank()) {
+            errorMessage = "Authentication required";
+        }
+
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType("application/json");
 
@@ -21,8 +27,8 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
             {
               "success": false,
               "message": "Unauthorized",
-              "error": "Authentication required"
+              "error": "%s"
             }
-        """);
+        """.formatted(errorMessage));
     }
 }
