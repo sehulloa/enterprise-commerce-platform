@@ -101,9 +101,24 @@ Objetivo:
 - Configured Logback (console + file logging)
 - Enabled and configured Spring Boot Actuator
 
-## Future Phases
+### Phase 18 — Security Hardening ✔
 
-### Phase 18 — Security Hardening
+- Implemented JWT-based stateless authentication
+- Externalized JWT configuration (secret and expiration)
+- Added JwtAuthenticationFilter for request validation
+- Implemented AuthenticationService and login flow
+- Integrated CustomUserDetailsService with identity-access module
+- Enabled method-level authorization with @PreAuthorize
+- Applied permission-based access control (hasAuthority)
+- Implemented proper error handling:
+  - 401 Unauthorized (authentication issues)
+  - 403 Forbidden (authorization issues)
+- Fixed incorrect 500 responses in security flows
+- Restricted Actuator endpoints (health, info only)
+- Controlled Swagger exposure via configuration
+- Standardized security responses using ApiResponse structure
+
+## Future Phases
 
 ### Phase 19 — Testing Stabilization
 
