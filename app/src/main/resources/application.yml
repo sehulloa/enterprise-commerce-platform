@@ -2,18 +2,6 @@ spring:
   application:
     name: enterprise-commerce-platform
 
-  datasource:
-    url: jdbc:postgresql://localhost:5432/enterprise_commerce_db
-    username: postgres
-    password: postgres
-    driver-class-name: org.postgresql.Driver
-
-  rabbitmq:
-    host: localhost
-    port: 5672
-    username: guest
-    password: guest
-
   jpa:
     hibernate:
       ddl-auto: validate
@@ -27,38 +15,9 @@ spring:
     locations: classpath:db/migration
 
 server:
-  port: 8080
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: health, info
-
-  endpoint:
-    health:
-      show-details: always
-
-logging:
-  level:
-    root: INFO
-    org.springframework: INFO
-    org.hibernate.SQL: WARN
-    com.company.platform: DEBUG
-
-springdoc:
-  api-docs:
-    path: /v3/api-docs
-  swagger-ui:
-    path: /swagger-ui.html
-    operationSorter: method
-    tagsSorter: alpha
+  port: ${SERVER_PORT:8080}
 
 security:
   jwt:
     secret: ${JWT_SECRET:esta-es-una-clave-secreta-muy-larga-y-segura-de-al-menos-32-caracteres}
     expiration: ${JWT_EXPIRATION:86400000}
-
-app:
-  security:
-    swagger-enabled: true
