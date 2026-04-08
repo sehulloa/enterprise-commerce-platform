@@ -12,6 +12,8 @@ FROM eclipse-temurin:21-jre
 
 WORKDIR /app
 
+RUN apt-get update && apt-get install -y wget && rm -rf /var/lib/apt/lists/*
+
 RUN addgroup --system spring && adduser --system spring --ingroup spring
 
 COPY --from=builder /workspace/app/build/libs/*.jar app.jar
