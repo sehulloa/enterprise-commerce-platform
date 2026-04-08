@@ -118,11 +118,27 @@ Objetivo:
 - Controlled Swagger exposure via configuration
 - Standardized security responses using ApiResponse structure
 
+### Phase 19 — Containerization & Runtime Environments ✔
+
+- Added runtime profile separation (dev, docker, prod)
+- Externalized environment-based configuration
+- Added multi-stage Dockerfile for app runtime
+- Added .dockerignore
+- Expanded Docker Compose to include app, PostgreSQL and RabbitMQ
+- Added .env.example for local runtime setup
+- Hardened runtime configuration
+- Added health checks for infrastructure and app
+- Documented runtime and deployment workflow
+
 ## Future Phases
 
-### Phase 19 — Testing Stabilization
+### Phase 20 — CI/CD & Release Automation
 
-### Phase 20 — API Hardening
+- Define release workflow
+- Add build/test pipeline
+- Add Docker image build automation
+- Add release validation flow
+- Prepare deployment automation
 
 ### Phase 21 — Observability (Metrics & Monitoring)
 
