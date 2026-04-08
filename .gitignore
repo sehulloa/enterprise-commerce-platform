@@ -5,6 +5,10 @@ build/
 !**/src/test/**/build/
 **/logs/
 *.log
+.env
+.env.*
+!.env.example
+
 
 ### IntelliJ IDEA ###
 .idea/
