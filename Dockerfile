@@ -1,27 +1,28 @@
-# ===== Stage 1: Build =====
-FROM gradle:8.8-jdk21 AS builder
+# --------- BUILD STAGE ---------
+FROM gradle:8.7-jdk21 AS builder
 
-WORKDIR /workspace
-
+WORKDIR /app
 COPY . .
 
-RUN gradle :app:bootJar --no-daemon
+RUN gradle clean bootJar --no-daemon
 
-# ===== Stage 2: Runtime =====
-FROM eclipse-temurin:21-jre
+# --------- RUNTIME STAGE ---------
+FROM eclipse-temurin:21-jre-jammy
 
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y wget && rm -rf /var/lib/apt/lists/*
+# Copiar jar generado
+COPY --from=builder /app/app/build/libs/*.jar app.jar
 
-RUN addgroup --system spring && adduser --system spring --ingroup spring
-
-COPY --from=builder /workspace/app/build/libs/*.jar app.jar
-
-RUN mkdir -p /app/logs && chown -R spring:spring /app
-
-USER spring:spring
-
+# Puerto estándar
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+# Variables por defecto (pueden ser sobreescritas)
+ENV SPRING_PROFILES_ACTIVE=prod
+
+# Healthcheck para contenedor
+HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 \
+  CMD curl -f http://localhost:8080/actuator/health || exit 1
+
+# Comando de arranque
+ENTRYPOINT ["java","-jar","app.jar"]
