@@ -117,3 +117,17 @@ This release flow supports:
 - cleaner release preparation
 - reproducible versioning
 - automated image publication from `main`
+
+---
+
+## CI/CD Tooling
+
+The project uses GitHub Actions as the primary CI/CD pipeline.
+
+A complementary `Jenkinsfile` is also included to simulate an enterprise-oriented pipeline with:
+
+- build
+- test
+- SonarQube analysis
+- Docker image build
+- Docker image publication from `main`
