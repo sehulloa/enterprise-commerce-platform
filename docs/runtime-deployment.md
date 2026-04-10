@@ -131,3 +131,9 @@ Flow:
 - Dockerized runtime
 - full stack working
 - production-like setup  
+
+---
+
+## Related Documentation
+
+- `docs/release-flow.md` → release branching and versioning guide
