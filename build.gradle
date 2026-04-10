@@ -58,4 +58,14 @@ subprojects {
     tasks.withType(Test).configureEach {
         useJUnitPlatform()
     }
+
+    sonar {
+        properties {
+            property "sonar.projectKey", "sehulloa_enterprise-commerce-platform"
+            property "sonar.projectName", "enterprise-commerce-platform"
+            property "sonar.host.url", System.getenv("SONAR_HOST_URL")
+            property "sonar.token", System.getenv("SONAR_TOKEN")
+        }
+    }
+
 }
