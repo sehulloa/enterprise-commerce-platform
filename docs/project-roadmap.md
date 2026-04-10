@@ -130,17 +130,22 @@ Objetivo:
 - Added health checks for infrastructure and app
 - Documented runtime and deployment workflow
 
-## Future Phases
-
 ### Phase 20 — CI/CD & Release Automation
 
-- Define release workflow
-- Add build/test pipeline
-- Add Docker image build automation
-- Add release validation flow
-- Prepare deployment automation
+- Added base GitHub Actions CI workflow
+- Added SonarQube integration workflow
+- Added Docker image publish workflow to GHCR
+- Defined release branch strategy and versioning flow
+- Preparing branch protection and deployment-oriented automation
 
-### Phase 21 — Observability (Metrics & Monitoring)
+## Future Phases
+
+### Phase 21 — Deployment Automation
+
+- Define deployment target
+- Automate container deployment
+- Externalize production runtime configuration
+- Add deployment validation flow
 
 ### Phase 22 — CI/CD Hardening
 

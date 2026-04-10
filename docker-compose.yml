@@ -80,9 +80,27 @@ services:
       retries: 10
       start_period: 40s
 
+  sonarqube:
+    image: sonarqube:10.7-community
+    container_name: ecp-sonarqube
+    restart: unless-stopped
+    ports:
+      - "9000:9000"
+    environment:
+      SONAR_ES_BOOTSTRAP_CHECKS_DISABLE: "true"
+    networks:
+      - ecp-network
+    volumes:
+      - sonarqube_data:/opt/sonarqube/data
+      - sonarqube_extensions:/opt/sonarqube/extensions
+      - sonarqube_logs:/opt/sonarqube/logs
+
 volumes:
   postgres_data:
   rabbitmq_data:
+  sonarqube_data:
+  sonarqube_extensions:
+  sonarqube_logs:
 
 networks:
   ecp-network:
