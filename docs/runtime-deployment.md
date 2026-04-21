@@ -137,3 +137,24 @@ Flow:
 ## Related Documentation
 
 - `docs/release-flow.md` → release branching and versioning guide
+
+---
+
+## AWS Production Target
+
+The production runtime target for this project is AWS.
+
+The planned production architecture uses:
+
+- Amazon ECS with Fargate for application runtime
+- Amazon RDS for PostgreSQL
+- Amazon MQ for RabbitMQ
+- Amazon ECR for container images
+- Application Load Balancer for HTTP entry
+- CloudWatch Logs for runtime observability
+- Secrets Manager or Parameter Store for sensitive configuration
+
+This document should be read together with:
+
+- `docs/aws-deployment-architecture.md`
+- `docs/release-flow.md`
