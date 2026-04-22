@@ -158,3 +158,21 @@ This document should be read together with:
 
 - `docs/aws-deployment-architecture.md`
 - `docs/release-flow.md`
+
+---
+
+## Deployment Validation
+
+After deployment, the application must be validated through:
+
+- availability check from the public entry point
+- `/actuator/health` verification
+- runtime log inspection
+- database connectivity verification
+- RabbitMQ connectivity verification
+- basic functional smoke test
+
+See:
+
+- `docs/deployment-validation.md`
+- `docs/aws-deployment-architecture.md`

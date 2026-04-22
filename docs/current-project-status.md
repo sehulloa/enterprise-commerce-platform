@@ -88,8 +88,8 @@
 
 ### Current Phase
 
-👉 Phase 20 — CI/CD & Release Automation
+👉 Phase 21 — Deployment Automation ✔
 
 ### Next Phase
 
-👉 Phase 21 — Deployment Automation
+👉 Phase 22 — Infrastructure Provisioning & First AWS Runtime
