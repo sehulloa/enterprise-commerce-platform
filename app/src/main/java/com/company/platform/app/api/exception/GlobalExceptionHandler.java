@@ -23,6 +23,10 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    private static final String validErrorMsg = "Validation error";
+    private static final String authFailMsg = "Authentication failed";
+
+
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ApiErrorResponse> handleNotFound(NotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -33,7 +37,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ValidationException.class)
     public ResponseEntity<ApiErrorResponse> handleValidation(ValidationException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(ApiResponseFactory.error("Validation error", ex.getMessage()));
+                .body(ApiResponseFactory.error(validErrorMsg, ex.getMessage()));
     }
 
 
@@ -58,7 +62,7 @@ public class GlobalExceptionHandler {
         }
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(ApiResponseFactory.error("Validation error", errorMessage));
+                .body(ApiResponseFactory.error(validErrorMsg, errorMessage));
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
@@ -75,19 +79,19 @@ public class GlobalExceptionHandler {
         }
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(ApiResponseFactory.error("Validation error", errorMessage));
+                .body(ApiResponseFactory.error(validErrorMsg, errorMessage));
     }
 
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ApiErrorResponse> handleBadCredentials(BadCredentialsException ex) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(ApiResponseFactory.error("Authentication failed", "Bad credentials"));
+                .body(ApiResponseFactory.error(authFailMsg, "Bad credentials"));
     }
 
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<ApiErrorResponse> handleAuthenticationException(AuthenticationException ex) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(ApiResponseFactory.error("Authentication failed", ex.getMessage()));
+                .body(ApiResponseFactory.error(authFailMsg, ex.getMessage()));
     }
 
     @ExceptionHandler(AccessDeniedException.class)
@@ -99,7 +103,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ExpiredJwtException.class)
     public ResponseEntity<ApiErrorResponse> handleExpiredJwt(ExpiredJwtException ex) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(ApiResponseFactory.error("Authentication failed", "Token expired"));
+                .body(ApiResponseFactory.error(authFailMsg, "Token expired"));
     }
 
     @ExceptionHandler({
@@ -110,7 +114,7 @@ public class GlobalExceptionHandler {
     })
     public ResponseEntity<ApiErrorResponse> handleJwtException(Exception ex) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(ApiResponseFactory.error("Authentication failed", "Invalid token"));
+                .body(ApiResponseFactory.error(authFailMsg, "Invalid token"));
     }
 
     @ExceptionHandler(Exception.class)

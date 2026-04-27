@@ -10,7 +10,6 @@ import com.company.platform.customers.application.service.CustomerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
@@ -35,20 +34,18 @@ public class CustomerController {
             summary = "Create customer",
             description = "Creates a new customer"
     )
-    @ApiResponses({
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Customer created successfully",
-                content = @Content(schema = @Schema(implementation = ApiResponse.class))),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Invalid request",
-                content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "Internal server error",
-                content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
-    })
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Customer created successfully",
+            content = @Content(schema = @Schema(implementation = ApiResponse.class)))
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Invalid request",
+            content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "Internal server error",
+            content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
     public ResponseEntity<ApiResponse<CustomerResponse>> createCustomer(
             @Valid @RequestBody CreateCustomerRequest request
     ) {
         CustomerResponse response = customerService.createCustomer(request);
 
-        return ResponseEntity.ok(ApiResponseFactory.success(response,"Customer created successfully")
+        return ResponseEntity.ok(ApiResponseFactory.success(response, "Customer created successfully")
         );
     }
 
@@ -57,14 +54,12 @@ public class CustomerController {
             summary = "Get customer by ID",
             description = "Retrieves a customer by ID"
     )
-    @ApiResponses({
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Customer retrieved successfully",
-                    content = @Content(schema = @Schema(implementation = ApiResponse.class))),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Customer not found",
-                    content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "Internal server error",
-                content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
-    })
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Customer retrieved successfully",
+            content = @Content(schema = @Schema(implementation = ApiResponse.class)))
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Customer not found",
+            content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "Internal server error",
+            content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
     public ResponseEntity<ApiResponse<CustomerResponse>> getCustomerById(
             @PathVariable @Min(1) Long id
     ) {
@@ -79,14 +74,11 @@ public class CustomerController {
             summary = "Get all customers",
             description = "Retrieves all customers"
     )
-    @ApiResponses({
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Customers retrieved successfully",
-                content = @Content(schema = @Schema(implementation = ApiResponse.class)))
-,
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500",
-                description = "Internal server error",
-                content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
-    })
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Customers retrieved successfully",
+            content = @Content(schema = @Schema(implementation = ApiResponse.class)))
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500",
+            description = "Internal server error",
+            content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
     public ResponseEntity<ApiResponse<List<CustomerResponse>>> getAllCustomers() {
         List<CustomerResponse> response = customerService.getAllCustomers();
 
@@ -99,18 +91,15 @@ public class CustomerController {
             summary = "Update customer status",
             description = "Updates the status of an existing customer"
     )
-    @ApiResponses({
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Customer status updated successfully",
-                content = @Content(schema = @Schema(implementation = ApiResponse.class)))
-,
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400",
-                description = "Invalid request",
-                content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Customer not found"),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500",
-                description = "Internal server error",
-                content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
-    })
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Customer status updated successfully",
+            content = @Content(schema = @Schema(implementation = ApiResponse.class)))
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400",
+            description = "Invalid request",
+            content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Customer not found")
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500",
+            description = "Internal server error",
+            content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
     public ResponseEntity<ApiResponse<CustomerResponse>> updateCustomerStatus(
             @PathVariable @Min(1) Long id,
             @Valid @RequestBody UpdateCustomerStatusRequest request

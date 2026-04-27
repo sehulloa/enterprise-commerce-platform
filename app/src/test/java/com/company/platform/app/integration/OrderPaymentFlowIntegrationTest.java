@@ -28,7 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(scripts = "/test-data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @Disabled("Testcontainers not working in local Windows environment")
-public class OrderPaymentFlowIntegrationTest {
+class OrderPaymentFlowIntegrationTest {
 
     @Container
     static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16")
@@ -157,7 +157,7 @@ public class OrderPaymentFlowIntegrationTest {
 
         Map confirmData = (Map) confirmResponse.getBody().get("data");
 
-        assertThat(confirmData.get("status")).isEqualTo("CAPTURED");
+        assertThat(confirmData).containsEntry("status", "CAPTURED");
 
         // 4. Validar orden confirmada
         ResponseEntity<Map> getOrderResponse = restTemplate.exchange(
@@ -169,7 +169,7 @@ public class OrderPaymentFlowIntegrationTest {
 
         Map finalOrderData = (Map) getOrderResponse.getBody().get("data");
 
-        assertThat(finalOrderData.get("status")).isEqualTo("CONFIRMED");
+        assertThat(finalOrderData).containsEntry("status", "CONFIRMED");
     }
 
 }
