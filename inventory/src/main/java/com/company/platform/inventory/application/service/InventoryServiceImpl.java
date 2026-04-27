@@ -2,6 +2,7 @@ package com.company.platform.inventory.application.service;
 
 import com.company.platform.common.api.exception.BusinessException;
 import com.company.platform.common.api.exception.NotFoundException;
+import com.company.platform.common.api.exception.ResourceAlreadyExistsException;
 import com.company.platform.inventory.api.dto.AdjustStockRequest;
 import com.company.platform.inventory.api.dto.CreateInventoryItemRequest;
 import com.company.platform.inventory.domain.enumtype.StockMovementType;
@@ -22,6 +23,8 @@ public class InventoryServiceImpl implements InventoryService {
     private final InventoryItemRepository inventoryItemRepository;
     private final StockMovementRepository stockMovementRepository;
 
+    private static final String ITEM_NFOUND_MSG = "Inventory item not found";
+
     @Override
     @Transactional
     public InventoryItem createInventoryItem(CreateInventoryItemRequest request) {
@@ -33,7 +36,7 @@ public class InventoryServiceImpl implements InventoryService {
 
         inventoryItemRepository.findByBranchIdAndProductId(request.getBranchId(), request.getProductId())
                 .ifPresent(item -> {
-                    throw new RuntimeException("Inventory item already exists for branch and product");
+                    throw new ResourceAlreadyExistsException("Inventory item already exists for branch and product");
                 });
 
         InventoryItem inventoryItem = new InventoryItem();
@@ -115,7 +118,7 @@ public class InventoryServiceImpl implements InventoryService {
         InventoryItem inventoryItem = findInventoryItemOrThrow(request.getInventoryItemId());
 
         if (inventoryItem.getTotalQuantity() - request.getQuantity() < inventoryItem.getReservedQuantity()) {
-            throw new RuntimeException("Cannot reduce stock below reserved quantity");
+            throw new BusinessException("Cannot reduce stock below reserved quantity");
         }
 
         inventoryItem.setTotalQuantity(inventoryItem.getTotalQuantity() - request.getQuantity());
@@ -135,7 +138,7 @@ public class InventoryServiceImpl implements InventoryService {
     @Transactional(readOnly = true)
     public int getAvailableStock(Long branchId, Long productId) {
         InventoryItem inventoryItem = inventoryItemRepository.findByBranchIdAndProductId(branchId, productId)
-                .orElseThrow(() -> new RuntimeException("Inventory item not found"));
+                .orElseThrow(() -> new RuntimeException(ITEM_NFOUND_MSG));
 
         return inventoryItem.getTotalQuantity() - inventoryItem.getReservedQuantity();
     }
@@ -151,7 +154,7 @@ public class InventoryServiceImpl implements InventoryService {
 
         InventoryItem item = inventoryItemRepository
                 .findByBranchIdAndProductId(branchId, productId)
-                .orElseThrow(() -> new NotFoundException("Inventory item not found"));
+                .orElseThrow(() -> new NotFoundException(ITEM_NFOUND_MSG));
 
         int available = item.getTotalQuantity() - item.getReservedQuantity();
 
@@ -178,7 +181,7 @@ public class InventoryServiceImpl implements InventoryService {
 
     private InventoryItem findInventoryItemOrThrow(Long inventoryItemId) {
         return inventoryItemRepository.findById(inventoryItemId)
-                .orElseThrow(() -> new RuntimeException("Inventory item not found"));
+                .orElseThrow(() -> new RuntimeException(ITEM_NFOUND_MSG));
     }
 
     private void saveMovement(Long inventoryItemId,

@@ -11,7 +11,6 @@ import com.company.platform.payments.application.service.PaymentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
@@ -38,19 +37,17 @@ public class PaymentController {
             summary = "Create payment",
             description = "Creates a payment for an order"
     )
-    @ApiResponses({
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Payment created successfully",
-                content = @Content(schema = @Schema(implementation = ApiResponse.class))),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400",
-                description = "Invalid request",
-                content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404",
-                description = "Related resource not found",
-                content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500",
-                description = "Internal server error",
-                content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
-    })
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Payment created successfully",
+            content = @Content(schema = @Schema(implementation = ApiResponse.class)))
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400",
+            description = "Invalid request",
+            content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404",
+            description = "Related resource not found",
+            content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500",
+            description = "Internal server error",
+            content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
     public ResponseEntity<ApiResponse<PaymentResponse>> createPayment(
             @Valid @RequestBody CreatePaymentRequest request
     ) {
@@ -65,14 +62,12 @@ public class PaymentController {
             summary = "Get payments by order",
             description = "Retrieves all payments for the specified order"
     )
-    @ApiResponses({
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Payments retrieved successfully",
-                content = @Content(schema = @Schema(implementation = ApiResponse.class))),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Invalid request",
-                content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "Internal server error",
-                content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
-    })
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Payments retrieved successfully",
+            content = @Content(schema = @Schema(implementation = ApiResponse.class)))
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Invalid request",
+            content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "Internal server error",
+            content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
     public ResponseEntity<ApiResponse<List<PaymentResponse>>> getPaymentsByOrderId(
             @RequestParam Long orderId
     ) {
@@ -88,16 +83,14 @@ public class PaymentController {
             summary = "Confirm payment",
             description = "Confirms an existing payment"
     )
-    @ApiResponses({
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Payment confirmed successfully",
-                content = @Content(schema = @Schema(implementation = ApiResponse.class))),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Payment cannot be confirmed",
-                    content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Payment not found",
-                    content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "Internal server error",
-                content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
-    })
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Payment confirmed successfully",
+            content = @Content(schema = @Schema(implementation = ApiResponse.class)))
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Payment cannot be confirmed",
+            content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Payment not found",
+            content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "Internal server error",
+            content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
     public ResponseEntity<ApiResponse<PaymentResponse>> confirmPayment(
             @PathVariable @Min(1) Long paymentId,
             @Valid @RequestBody ConfirmPaymentRequest request
@@ -114,16 +107,14 @@ public class PaymentController {
             summary = "Fail payment",
             description = "Marks an existing payment as failed"
     )
-    @ApiResponses({
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Payment failed successfully",
-                content = @Content(schema = @Schema(implementation = ApiResponse.class))),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Payment cannot be failed",
-                    content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Payment not found",
-                    content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "Internal server error",
-                content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
-    })
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Payment failed successfully",
+            content = @Content(schema = @Schema(implementation = ApiResponse.class)))
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Payment cannot be failed",
+            content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Payment not found",
+            content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "Internal server error",
+            content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
     public ResponseEntity<ApiResponse<PaymentResponse>> failPayment(
             @PathVariable @Min(1) Long paymentId,
             @Valid @RequestBody UpdatePaymentStatusRequest request
@@ -141,16 +132,14 @@ public class PaymentController {
             summary = "Cancel payment",
             description = "Cancels an existing payment"
     )
-    @ApiResponses({
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Payment cancelled successfully",
-                content = @Content(schema = @Schema(implementation = ApiResponse.class))),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Payment cannot be cancelled",
-                    content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Payment not found",
-                    content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "Internal server error",
-                content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
-    })
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Payment cancelled successfully",
+            content = @Content(schema = @Schema(implementation = ApiResponse.class)))
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Payment cannot be cancelled",
+            content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Payment not found",
+            content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "Internal server error",
+            content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
     public ResponseEntity<ApiResponse<PaymentResponse>> cancelPayment(
             @PathVariable @Min(1) Long paymentId,
             @Valid @RequestBody UpdatePaymentStatusRequest request
