@@ -13,7 +13,6 @@ import com.company.platform.orders.domain.model.OrderItem;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
@@ -40,19 +39,17 @@ public class OrderController {
             summary = "Create order",
             description = "Creates a new order for a customer in a branch with the provided items"
     )
-    @ApiResponses({
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "Order created successfully",
-                content = @Content(schema = @Schema(implementation = ApiResponse.class))),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400",
-                description = "Invalid request",
-                content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404",
-                description = "Related resource not found",
-                content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500",
-                description = "Internal server error",
-                content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
-    })
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "Order created successfully",
+            content = @Content(schema = @Schema(implementation = ApiResponse.class)))
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400",
+            description = "Invalid request",
+            content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404",
+            description = "Related resource not found",
+            content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500",
+            description = "Internal server error",
+            content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
     public ResponseEntity<ApiResponse<OrderResponse>> createOrder(@RequestBody CreateOrderRequest request) {
         Order order = orderService.createOrder(request);
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -65,15 +62,13 @@ public class OrderController {
             summary = "Get order by ID",
             description = "Retrieves an order by its ID"
     )
-    @ApiResponses({
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Order retrieved successfully",
-                content = @Content(schema = @Schema(implementation = ApiResponse.class))),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Order not found",
-                    content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500",
-                description = "Internal server error",
-                content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
-    })
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Order retrieved successfully",
+            content = @Content(schema = @Schema(implementation = ApiResponse.class)))
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Order not found",
+            content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500",
+            description = "Internal server error",
+            content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
     public ResponseEntity<ApiResponse<OrderResponse>> getById(@PathVariable @Min(1) Long id) {
         Order order = orderService.findById(id)
                 .orElseThrow(() -> new NotFoundException("Order not found with id: " + id));
@@ -88,13 +83,11 @@ public class OrderController {
             summary = "Get orders by customer",
             description = "Retrieves all orders for the specified customer"
     )
-    @ApiResponses({
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Orders retrieved successfully",
-                content = @Content(schema = @Schema(implementation = ApiResponse.class))),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500",
-                description = "Internal server error",
-                content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
-    })
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Orders retrieved successfully",
+            content = @Content(schema = @Schema(implementation = ApiResponse.class)))
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500",
+            description = "Internal server error",
+            content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
     public ResponseEntity<ApiResponse<List<OrderResponse>>> getByCustomerId(@PathVariable @Min(1) Long customerId) {
         List<OrderResponse> responses = orderService.findByCustomerId(customerId)
                 .stream()
@@ -111,13 +104,11 @@ public class OrderController {
             summary = "Get orders by branch",
             description = "Retrieves all orders for the specified branch"
     )
-    @ApiResponses({
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Orders retrieved successfully",
-                content = @Content(schema = @Schema(implementation = ApiResponse.class))),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500",
-                description = "Internal server error",
-                content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
-    })
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Orders retrieved successfully",
+            content = @Content(schema = @Schema(implementation = ApiResponse.class)))
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500",
+            description = "Internal server error",
+            content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
     public ResponseEntity<ApiResponse<List<OrderResponse>>> getByBranchId(@PathVariable @Min(1) Long branchId) {
         List<OrderResponse> responses = orderService.findByBranchId(branchId)
                 .stream()
@@ -134,16 +125,14 @@ public class OrderController {
             summary = "Confirm order",
             description = "Confirms an existing order"
     )
-    @ApiResponses({
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Order confirmed successfully",
-                content = @Content(schema = @Schema(implementation = ApiResponse.class))),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Order not found",
-                    content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Order cannot be confirmed"),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500",
-                description = "Internal server error",
-                content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
-    })
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Order confirmed successfully",
+            content = @Content(schema = @Schema(implementation = ApiResponse.class)))
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Order not found",
+            content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Order cannot be confirmed",
+            content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "Internal server error",
+            content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
     public ResponseEntity<ApiResponse<OrderResponse>> confirmOrder(
             @PathVariable @Min(1) Long orderId) {
 
@@ -159,16 +148,15 @@ public class OrderController {
             summary = "Cancel order",
             description = "Cancels an existing order"
     )
-    @ApiResponses({
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Order cancelled successfully",
-                content = @Content(schema = @Schema(implementation = ApiResponse.class))),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Order not found",
-                    content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Order cannot be cancelled"),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500",
-                description = "Internal server error",
-                content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
-    })
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Order cancelled successfully",
+            content = @Content(schema = @Schema(implementation = ApiResponse.class)))
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Order not found",
+            content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Order cannot be cancelled",
+            content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500",
+            description = "Internal server error",
+            content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
     public ResponseEntity<ApiResponse<OrderResponse>> cancelOrder(
             @PathVariable @Min(1) Long orderId) {
 

@@ -1,0 +1,74 @@
+{
+  "family": "enterprise-commerce-platform",
+  "requiresCompatibilities": ["FARGATE"],
+  "networkMode": "awsvpc",
+  "cpu": "1024",
+  "memory": "2048",
+  "executionRoleArn": "arn:aws:iam::<ACCOUNT_ID>:role/ecsTaskExecutionRole",
+  "taskRoleArn": "arn:aws:iam::<ACCOUNT_ID>:role/enterprise-commerce-platform-task-role",
+  "containerDefinitions": [
+    {
+      "name": "app",
+      "image": "<ACCOUNT_ID>.dkr.ecr.<REGION>.amazonaws.com/enterprise-commerce-platform:latest",
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 8080,
+          "protocol": "tcp"
+        }
+      ],
+      "environment": [
+        {
+          "name": "SPRING_PROFILES_ACTIVE",
+          "value": "prod"
+        },
+        {
+          "name": "SERVER_PORT",
+          "value": "8080"
+        },
+        {
+          "name": "RABBITMQ_PORT",
+          "value": "5672"
+        }
+      ],
+      "secrets": [
+        {
+          "name": "DB_URL",
+          "valueFrom": "<SECRET_ARN>"
+        },
+        {
+          "name": "DB_USERNAME",
+          "valueFrom": "<SECRET_ARN>"
+        },
+        {
+          "name": "DB_PASSWORD",
+          "valueFrom": "<SECRET_ARN>"
+        },
+        {
+          "name": "RABBITMQ_HOST",
+          "valueFrom": "<SECRET_ARN>"
+        },
+        {
+          "name": "RABBITMQ_USERNAME",
+          "valueFrom": "<SECRET_ARN>"
+        },
+        {
+          "name": "RABBITMQ_PASSWORD",
+          "valueFrom": "<SECRET_ARN>"
+        },
+        {
+          "name": "JWT_SECRET",
+          "valueFrom": "<SECRET_ARN>"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/enterprise-commerce-platform",
+          "awslogs-region": "<REGION>",
+          "awslogs-stream-prefix": "ecs"
+        }
+      }
+    }
+  ]
+}

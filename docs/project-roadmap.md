@@ -142,11 +142,19 @@ Objetivo:
 
 ### Phase 21 — Deployment Automation
 
-- Define deployment target
-- Automate container deployment
-- Externalize production runtime configuration
-- Add deployment validation flow
+- Added production runtime profile and externalized configuration
+- Hardened Docker image for production-oriented container runtime
+- Added AWS ECS base deployment descriptors
+- Added GitHub Actions workflow for ECR publish and ECS deployment flow
+- Defined post-deployment validation checklist
+- Prepared the project for AWS runtime execution
 
-### Phase 22 — CI/CD Hardening
+### Phase 22 — Infrastructure Provisioning & First AWS Runtime
+
+- Create Amazon ECR repository
+- Provision base ECS/Fargate runtime
+- Define IAM roles for ECS task execution
+- Provision production PostgreSQL and RabbitMQ services
+- Execute first controlled deployment in AWS
 
 ### Phase 23 — Microservices Readiness

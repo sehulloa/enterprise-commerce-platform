@@ -1,0 +1,16 @@
+{
+  "environment": [
+    { "name": "SPRING_PROFILES_ACTIVE", "value": "prod" },
+    { "name": "SERVER_PORT", "value": "8080" },
+    { "name": "RABBITMQ_PORT", "value": "5672" }
+  ],
+  "secrets": [
+    { "name": "DB_URL", "source": "AWS Secrets Manager" },
+    { "name": "DB_USERNAME", "source": "AWS Secrets Manager" },
+    { "name": "DB_PASSWORD", "source": "AWS Secrets Manager" },
+    { "name": "RABBITMQ_HOST", "source": "AWS Secrets Manager" },
+    { "name": "RABBITMQ_USERNAME", "source": "AWS Secrets Manager" },
+    { "name": "RABBITMQ_PASSWORD", "source": "AWS Secrets Manager" },
+    { "name": "JWT_SECRET", "source": "AWS Secrets Manager" }
+  ]
+}
