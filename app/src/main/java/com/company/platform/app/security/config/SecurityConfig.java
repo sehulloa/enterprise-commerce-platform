@@ -69,6 +69,7 @@ public class SecurityConfig {
                     "/auth/**",
                     "/actuator/health",
                     "/actuator/info",
+                    "/actuator/prometheus",
                     "/swagger-ui.html",
                     "/swagger-ui/**",
                     "/v3/api-docs/**"
@@ -78,7 +79,8 @@ public class SecurityConfig {
         return new String[] {
                 "/auth/**",
                 "/actuator/health",
-                "/actuator/info"
+                "/actuator/info",
+                "/actuator/prometheus",
         };
     }
 }
