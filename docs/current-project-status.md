@@ -88,8 +88,8 @@
 
 ### Current Phase
 
-👉 Phase 21 — Deployment Automation ✔
+👉 Phase 23 — Backend Closure & Operational Readiness
 
 ### Next Phase
 
-👉 Phase 22 — Infrastructure Provisioning & First AWS Runtime
+👉 Phase 24 — Terraform Infrastructure as Code
