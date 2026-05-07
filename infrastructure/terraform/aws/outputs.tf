@@ -17,3 +17,8 @@ output "name_prefix" {
   description = "Common naming prefix for AWS resources."
   value       = local.name_prefix
 }
+
+output "ecr_repository_url" {
+  description = "ECR repository URL for the application image."
+  value       = aws_ecr_repository.app.repository_url
+}
