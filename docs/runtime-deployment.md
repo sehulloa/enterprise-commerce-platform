@@ -176,3 +176,11 @@ See:
 
 - `docs/deployment-validation.md`
 - `docs/aws-deployment-architecture.md`
+
+## Monitoring
+
+The application exposes Prometheus metrics via:
+
+/actuator/prometheus
+
+Prometheus and Grafana are available via docker-compose for local monitoring.

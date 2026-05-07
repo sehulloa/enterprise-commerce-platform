@@ -41,6 +41,26 @@ services:
     networks:
         - ecp-network
 
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: ecp-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - ecp-network
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: ecp-grafana
+    ports:
+      - "3000:3000"
+    networks:
+      - ecp-network
+    depends_on:
+      - prometheus
+
   app:
     build:
       context: .

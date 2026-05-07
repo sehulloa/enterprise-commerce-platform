@@ -149,12 +149,22 @@ Objetivo:
 - Defined post-deployment validation checklist
 - Prepared the project for AWS runtime execution
 
-### Phase 22 — Infrastructure Provisioning & First AWS Runtime
+### Phase 22 — Infrastructure Provisioning & First AWS Runtime ✔
 
-- Create Amazon ECR repository
-- Provision base ECS/Fargate runtime
-- Define IAM roles for ECS task execution
-- Provision production PostgreSQL and RabbitMQ services
-- Execute first controlled deployment in AWS
+- Provisioned AWS ECR repository and pushed Docker image
+- Created ECS cluster and executed container using Fargate
+- Configured and connected AWS RDS PostgreSQL instance
+- Configured and connected Amazon MQ (RabbitMQ) broker
+- Validated application runtime in AWS environment
+- Verified full backend functionality with real infrastructure
+- Cleaned up AWS resources to avoid unnecessary costs
 
-### Phase 23 — Microservices Readiness
+
+### Phase 23 — Backend Closure & Operational Readiness ✔
+
+- Implemented monitoring with Prometheus and Grafana
+- Exposed application metrics via Spring Boot Actuator and Micrometer
+- Validated metrics collection and visualization
+- Completed backend documentation
+- Executed final operational checklist
+- Marked backend as stable and ready for evolution
