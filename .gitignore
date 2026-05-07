@@ -10,6 +10,7 @@ logs/
 .env.*
 !.env.example
 !.env.production.example
+**/app/util/**
 
 ### IntelliJ IDEA ###
 .idea/
@@ -44,3 +45,11 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+# Terraform
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+*.tfvars
+!*.tfvars.example
+.terraform.lock.hcl
