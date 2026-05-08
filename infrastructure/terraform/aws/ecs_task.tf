@@ -31,9 +31,20 @@ resource "aws_ecs_task_definition" "app" {
         }
       ]
 
+      logConfiguration = {
+        logDriver = "awslogs"
+
+        options = {
+          awslogs-group         = aws_cloudwatch_log_group.app.name
+          awslogs-region        = var.aws_region
+          awslogs-stream-prefix = "ecs"
+        }
+      }
+
       essential = true
     }
   ])
 
   tags = local.common_tags
 }
+
