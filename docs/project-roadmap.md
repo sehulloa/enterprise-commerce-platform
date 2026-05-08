@@ -168,3 +168,22 @@ Objetivo:
 - Completed backend documentation
 - Executed final operational checklist
 - Marked backend as stable and ready for evolution
+
+### Phase 24 — Terraform Infrastructure as Code ✔
+
+- Added Terraform project foundation for AWS infrastructure
+- Modeled Amazon ECR repository
+- Modeled ECS cluster and task definition
+- Modeled IAM task execution role
+- Modeled security groups for ECS, RDS, and MQ
+- Modeled RDS PostgreSQL and Amazon MQ RabbitMQ
+- Modeled CloudWatch log group for ECS application logs
+- Validated Terraform configuration without applying infrastructure
+
+### Phase 25 — Microservices Evolution Analysis
+
+- Review modular monolith boundaries
+- Identify candidate module for extraction
+- Analyze coupling, data ownership, and event contracts
+- Define first microservice extraction strategy
+- Document migration risks and required refactoring

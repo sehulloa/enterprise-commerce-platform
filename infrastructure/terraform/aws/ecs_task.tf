@@ -1,0 +1,50 @@
+resource "aws_ecs_task_definition" "app" {
+  family                   = "${local.name_prefix}-task"
+  requires_compatibilities = ["FARGATE"]
+  network_mode             = "awsvpc"
+
+  cpu    = "512"
+  memory = "1024"
+
+  execution_role_arn = aws_iam_role.ecs_task_execution.arn
+
+  container_definitions = jsonencode([
+    {
+      name  = "app"
+      image = "${aws_ecr_repository.app.repository_url}:latest"
+
+      portMappings = [
+        {
+          containerPort = 8080
+          protocol      = "tcp"
+        }
+      ]
+
+      environment = [
+        {
+          name  = "SPRING_PROFILES_ACTIVE"
+          value = "prod"
+        },
+        {
+          name  = "SERVER_PORT"
+          value = "8080"
+        }
+      ]
+
+      logConfiguration = {
+        logDriver = "awslogs"
+
+        options = {
+          awslogs-group         = aws_cloudwatch_log_group.app.name
+          awslogs-region        = var.aws_region
+          awslogs-stream-prefix = "ecs"
+        }
+      }
+
+      essential = true
+    }
+  ])
+
+  tags = local.common_tags
+}
+
