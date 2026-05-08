@@ -30,3 +30,11 @@ output "ecs_cluster_name" {
 output "ecs_task_definition_family" {
   value = aws_ecs_task_definition.app.family
 }
+
+output "rds_endpoint" {
+  value = aws_db_instance.postgres.endpoint
+}
+
+output "mq_broker_id" {
+  value = aws_mq_broker.rabbitmq.id
+}
