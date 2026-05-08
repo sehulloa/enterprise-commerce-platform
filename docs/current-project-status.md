@@ -88,10 +88,10 @@
 
 ### Current Phase
 
-👉 Phase 23 — Backend Closure & Operational Readiness ✔
+👉 Phase 24 — Terraform Infrastructure as Code ✔
 
 ---
 
 ### Next Phase
 
-👉 Phase 24 — Terraform Infrastructure as Code
+👉 Phase 25 — Microservices Evolution Analysis
